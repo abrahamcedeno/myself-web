@@ -1,0 +1,65 @@
+---
+import '../styles/global.css';
+import BaseHead from '../components/BaseHead.astro';
+import { ClientRouter } from 'astro:transitions';
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+const { title, description } = Astro.props;
+---
+
+<!doctype html>
+<html lang="es">
+  <head>
+    <BaseHead title={title} description={description} />
+    <ClientRouter />
+    {/* Aplica el tema antes de pintar para evitar parpadeo (FOUC). */}
+    <script is:inline>
+      (() => {
+        const saved = localStorage.getItem('theme');
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (saved === 'dark' || (!saved && prefersDark)) {
+          document.documentElement.classList.add('dark');
+        }
+        // Marca que hay JS: solo entonces ocultamos el contenido para animarlo.
+        document.documentElement.classList.add('js');
+      })();
+    </script>
+  </head>
+  <body>
+    <a
+      href="#contenido"
+      class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:rounded-full focus:bg-ink focus:px-4 focus:py-2 focus:text-sm focus:text-white"
+    >
+      Saltar al contenido
+    </a>
+    <slot />
+
+    {/* Revela los bloques [data-reveal] al entrar en pantalla. */}
+    <script>
+      const revealAll = () => {
+        const els = document.querySelectorAll('[data-reveal]:not(.in)');
+        if (!('IntersectionObserver' in window)) {
+          els.forEach((el) => el.classList.add('in'));
+          return;
+        }
+        const io = new IntersectionObserver(
+          (entries, obs) => {
+            entries.forEach((e) => {
+              if (e.isIntersecting) {
+                e.target.classList.add('in');
+                obs.unobserve(e.target);
+              }
+            });
+          },
+          { threshold: 0.16, rootMargin: '0px 0px -6% 0px' }
+        );
+        els.forEach((el) => io.observe(el));
+      };
+      // Compatible con las View Transitions de Astro (se re-ejecuta por página).
+      document.addEventListener('astro:page-load', revealAll);
+    </script>
+  </body>
+</html>

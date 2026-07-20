@@ -1,0 +1,93 @@
+---
+import { site } from '../data/site';
+
+// El formulario usa Web3Forms (envío sin backend, plan gratuito). Crea tu clave
+// gratis en https://web3forms.com y pégala en WEB3FORMS_KEY. Si lo dejas vacío,
+// el formulario queda deshabilitado y solo se muestran los enlaces directos.
+const WEB3FORMS_KEY = '';
+---
+
+<section id="contacto" class="py-22">
+  <div class="wrap max-w-[720px] text-center">
+    <p class="mb-3.5 text-[12.5px] font-semibold tracking-[0.14em] text-accent uppercase">
+      Contacto
+    </p>
+    <h2 class="text-[clamp(28px,6vw,42px)] font-bold text-ink">
+      ¿Tienes un dispositivo que medir,<br class="hidden sm:inline" /> conectar o
+      hacer más inteligente?
+    </h2>
+    <p class="mx-auto mt-4 mb-8 max-w-[520px] text-lg text-muted">
+      Escríbeme y lo vemos. Respondo rápido.
+    </p>
+
+    {WEB3FORMS_KEY ? (
+      <form
+        action="https://api.web3forms.com/submit"
+        method="POST"
+        class="mx-auto grid max-w-[520px] gap-3.5 text-left"
+      >
+        <input type="hidden" name="access_key" value={WEB3FORMS_KEY} />
+        <input type="hidden" name="subject" value="Nuevo mensaje desde tu web" />
+        <input type="checkbox" name="botcheck" class="hidden" tabindex="-1" autocomplete="off" />
+
+        <div class="grid gap-3.5 sm:grid-cols-2">
+          <label class="grid gap-1.5">
+            <span class="text-sm font-medium text-ink">Nombre</span>
+            <input
+              type="text" name="name" required autocomplete="name"
+              class="rounded-xl border border-sep bg-surface px-4 py-3 text-sm text-ink outline-none focus:border-accent"
+            />
+          </label>
+          <label class="grid gap-1.5">
+            <span class="text-sm font-medium text-ink">Email</span>
+            <input
+              type="email" name="email" required autocomplete="email"
+              class="rounded-xl border border-sep bg-surface px-4 py-3 text-sm text-ink outline-none focus:border-accent"
+            />
+          </label>
+        </div>
+        <label class="grid gap-1.5">
+          <span class="text-sm font-medium text-ink">Mensaje</span>
+          <textarea
+            name="message" required rows="4"
+            class="resize-y rounded-xl border border-sep bg-surface px-4 py-3 text-sm text-ink outline-none focus:border-accent"
+          ></textarea>
+        </label>
+        <label class="flex items-start gap-2.5 text-[13px] text-muted">
+          <input type="checkbox" name="consent" required class="mt-1" />
+          <span>
+            Acepto que mis datos se usen únicamente para responder a este mensaje
+            (ver <a href="/privacidad" class="text-accent underline">Privacidad</a>).
+          </span>
+        </label>
+        <button
+          type="submit"
+          class="mt-1 justify-self-start rounded-full bg-accent px-6 py-3.5 text-[15px] font-semibold text-white shadow-[0_8px_24px_rgba(0,122,255,0.28)] transition hover:-translate-y-0.5"
+        >
+          Enviar mensaje
+        </button>
+      </form>
+    ) : (
+      <div class="flex flex-wrap justify-center gap-3.5">
+        <a
+          href={`mailto:${site.email}`}
+          class="rounded-full bg-accent px-6 py-3.5 text-[15px] font-semibold text-white shadow-[0_8px_24px_rgba(0,122,255,0.28)] transition hover:-translate-y-0.5"
+        >
+          Enviar email
+        </a>
+        <a
+          href={site.linkedin} target="_blank" rel="noopener"
+          class="rounded-full bg-surface-2 px-6 py-3.5 text-[15px] font-semibold text-ink transition hover:-translate-y-0.5"
+        >
+          LinkedIn
+        </a>
+        <a
+          href={site.github} target="_blank" rel="noopener"
+          class="rounded-full bg-surface-2 px-6 py-3.5 text-[15px] font-semibold text-ink transition hover:-translate-y-0.5"
+        >
+          GitHub
+        </a>
+      </div>
+    )}
+  </div>
+</section>

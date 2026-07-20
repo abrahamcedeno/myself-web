@@ -1,0 +1,179 @@
+---
+// Soluciones en lenguaje de CLIENTE: una sección animada por solución.
+// Cuenta QUÉ resuelve y el valor, sin jerga técnica (el stack vive en #stack).
+const solutions = [
+  {
+    id: 'movimiento',
+    num: '01',
+    eyebrow: 'Wearable · salud y deporte',
+    title: 'Convierto el movimiento del cuerpo en datos fiables',
+    challenge:
+      'Un sensor colocado sobre una persona genera señales caóticas y llenas de ruido. Por sí solas, no significan nada.',
+    solution:
+      'Diseño el “cerebro” de un wearable diminuto para que interprete cada gesto en el instante y lo transforme en métricas claras: cuánto se mueve, cómo y cuándo. Sin cables, sin esperar, y con mucha autonomía.',
+    outcomes: ['Métricas fiables', 'En tiempo real', 'Batería que dura'],
+    reverse: false,
+  },
+  {
+    id: 'gps',
+    num: '02',
+    eyebrow: 'Rastreo · largo alcance',
+    title: 'Sabes dónde está cada cosa, aunque no haya cobertura móvil',
+    challenge:
+      'Localizar activos en el campo, en una obra o en ruta —donde el móvil no llega y sin cambiar la batería cada semana— es un dolor de cabeza.',
+    solution:
+      'Un rastreador que envía su posición a kilómetros de distancia gastando muy poca energía. Tú lo ves todo en un mapa, casi en directo, desde el móvil o el ordenador.',
+    outcomes: ['Alcance de kilómetros', 'Años de batería', 'Coste por equipo bajo'],
+    reverse: true,
+  },
+  {
+    id: 'panel',
+    num: '03',
+    eyebrow: 'Producto conectado · web y panel',
+    title: 'Tu producto conectado, entendible de un vistazo',
+    challenge:
+      'Tienes un dispositivo que genera datos, pero tú (y tus clientes) necesitáis verlos de forma simple, no en una hoja llena de números.',
+    solution:
+      'Una web clara que explica el producto y un panel donde los datos se convierten en gráficos fáciles de leer. Listo para enseñar a un cliente o a un inversor sin dar explicaciones.',
+    outcomes: ['Imagen profesional', 'Datos que se entienden', 'Va en el móvil'],
+    reverse: false,
+  },
+];
+---
+
+<section id="soluciones">
+  <div class="wrap pt-22 pb-6">
+    <p class="mb-3.5 text-[12.5px] font-semibold tracking-[0.14em] text-accent uppercase" data-reveal>
+      Soluciones
+    </p>
+    <h2 class="max-w-[620px] text-[clamp(28px,5vw,38px)] font-bold text-ink" data-reveal>
+      Lo que puedo construir para ti
+    </h2>
+    <p class="mt-3.5 max-w-[560px] text-[17px] text-muted" data-reveal>
+      Sin tecnicismos. Aquí va lo que consigues; el “cómo” lo dejo para quien
+      quiera bajar al detalle.
+    </p>
+  </div>
+
+  {solutions.map((s, i) => (
+    <div class:list={['py-14 sm:py-16', i % 2 === 1 ? 'bg-surface-2' : 'bg-page']}>
+      <div
+        class:list={[
+          'wrap grid items-center gap-10 md:grid-cols-2 md:gap-14',
+        ]}
+      >
+        <!-- Texto -->
+        <div class:list={[s.reverse ? 'md:order-2' : 'md:order-1']} data-reveal>
+          <p class="mb-3 font-mono text-[13px] font-medium text-accent">
+            {s.num} — {s.eyebrow}
+          </p>
+          <h3 class="mb-5 text-[clamp(23px,3.4vw,30px)] font-bold text-ink">
+            {s.title}
+          </h3>
+
+          <p class="mb-1.5 text-[12px] font-semibold tracking-[0.12em] text-muted uppercase">
+            El reto
+          </p>
+          <p class="mb-4 text-base text-body">{s.challenge}</p>
+
+          <p class="mb-1.5 text-[12px] font-semibold tracking-[0.12em] text-accent uppercase">
+            La solución
+          </p>
+          <p class="text-base text-body">{s.solution}</p>
+
+          <div class="mt-6 flex flex-wrap gap-2.5">
+            {s.outcomes.map((o) => (
+              <span class="inline-flex items-center gap-1.5 rounded-full bg-surface px-3.5 py-1.5 text-[13px] font-medium text-ink shadow-card">
+                <svg viewBox="0 0 20 20" class="h-3.5 w-3.5 text-green" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5l4 4 8-9"/></svg>
+                {o}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        <!-- Visual animado -->
+        <div class:list={[s.reverse ? 'md:order-1' : 'md:order-2']} data-reveal style="--reveal-delay:120ms">
+          <div class="relative grid h-[300px] place-items-center overflow-hidden rounded-card shadow-card sm:h-[340px]">
+            {s.id === 'movimiento' && (
+              <div class="absolute inset-0 bg-gradient-to-br from-[#e8f0ff] to-[#f5f5f7] dark:from-[#0a2a4a] dark:to-[#1c1c1e]">
+                <svg viewBox="0 0 400 340" class="h-full w-full" preserveAspectRatio="xMidYMid meet">
+                  <!-- señal en bruto (ruidosa) que se dibuja -->
+                  <polyline data-draw style="--len:900"
+                    points="10,190 40,120 55,240 80,90 100,250 120,150 140,220 165,110 185,235 205,130 400,175"
+                    fill="none" stroke="var(--color-accent)" stroke-width="2" opacity="0.35"
+                    stroke-linejoin="round" stroke-linecap="round" />
+                  <!-- señal limpia resultante -->
+                  <polyline data-draw style="--len:520;--reveal-delay:700ms"
+                    points="10,175 90,175 150,120 210,175 400,175"
+                    fill="none" stroke="var(--color-accent)" stroke-width="3.5"
+                    stroke-linejoin="round" stroke-linecap="round" />
+                </svg>
+                <div class="anim-floaty absolute right-5 top-6 rounded-2xl bg-surface px-4 py-3 text-center shadow-card-lg">
+                  <p class="font-mono text-[11px] text-muted">movimiento</p>
+                  <p class="font-display text-2xl font-bold text-ink">→ dato</p>
+                </div>
+                <p class="absolute bottom-4 left-5 font-mono text-[11px] text-muted">señal ruidosa → métrica limpia</p>
+              </div>
+            )}
+
+            {s.id === 'gps' && (
+              <div class="absolute inset-0 bg-gradient-to-br from-[#eafff2] to-[#f5f5f7] dark:from-[#10331f] dark:to-[#1c1c1e]">
+                <svg viewBox="0 0 400 340" class="h-full w-full" preserveAspectRatio="xMidYMid meet">
+                  <!-- ruta larga punteada que se dibuja -->
+                  <path data-draw style="--len:520"
+                    d="M60,250 C130,210 150,120 250,130" fill="none"
+                    stroke="var(--color-green)" stroke-width="2.5" stroke-dasharray="2 8" stroke-linecap="round" opacity="0.55" />
+                  <!-- torre / base -->
+                  <g stroke="var(--color-green)" stroke-width="2.5" fill="none">
+                    <path d="M60,250 L52,270 M60,250 L68,270" />
+                    <circle cx="60" cy="248" r="4" fill="var(--color-green)" stroke="none" />
+                  </g>
+                </svg>
+                <!-- pin con anillos que laten -->
+                <div class="absolute left-[62%] top-[38%] grid place-items-center">
+                  <span class="gps-ping absolute h-16 w-16 rounded-full bg-green/25"></span>
+                  <span class="gps-ping absolute h-16 w-16 rounded-full bg-green/25" style="animation-delay:1.3s"></span>
+                  <svg viewBox="0 0 24 24" class="anim-floaty relative h-9 w-9 text-green drop-shadow"><path fill="currentColor" d="M12 2C7.6 2 4 5.6 4 10c0 5.2 7 11.4 7.3 11.7.4.4 1 .4 1.4 0C13 21.4 20 15.2 20 10c0-4.4-3.6-8-8-8zm0 11a3 3 0 110-6 3 3 0 010 6z"/></svg>
+                </div>
+                <div class="anim-floaty absolute left-5 bottom-6 rounded-2xl bg-surface px-4 py-3 shadow-card-lg">
+                  <p class="font-mono text-[11px] text-muted">alcance</p>
+                  <p class="font-display text-xl font-bold text-ink">km · años 🔋</p>
+                </div>
+              </div>
+            )}
+
+            {s.id === 'panel' && (
+              <div class="absolute inset-0 grid place-items-center bg-gradient-to-br from-[#f3e8ff] to-[#f5f5f7] p-7 dark:from-[#2a1a3a] dark:to-[#1c1c1e]">
+                <div class="w-full max-w-[280px] rounded-2xl bg-surface p-4 shadow-card-lg">
+                  <div class="mb-3 flex items-center justify-between">
+                    <p class="font-display text-sm font-bold text-ink">Panel del dispositivo</p>
+                    <span class="h-2 w-2 rounded-full bg-green"></span>
+                  </div>
+                  <div class="mb-3 grid grid-cols-2 gap-2.5">
+                    <div class="rounded-xl bg-surface-2 p-2.5">
+                      <p class="font-mono text-[10px] text-muted">activos</p>
+                      <p class="font-display text-lg font-bold text-ink">128</p>
+                    </div>
+                    <div class="rounded-xl bg-surface-2 p-2.5">
+                      <p class="font-mono text-[10px] text-muted">en línea</p>
+                      <p class="font-display text-lg font-bold text-green">98%</p>
+                    </div>
+                  </div>
+                  <!-- barras que suben al aparecer -->
+                  <div class="flex h-16 items-end gap-1.5">
+                    <span class="bar flex-1 origin-bottom rounded-t bg-accent/70" style="height:45%"></span>
+                    <span class="bar flex-1 origin-bottom rounded-t bg-accent/70" style="height:70%;animation-delay:.08s"></span>
+                    <span class="bar flex-1 origin-bottom rounded-t bg-accent/70" style="height:38%;animation-delay:.16s"></span>
+                    <span class="bar flex-1 origin-bottom rounded-t bg-accent" style="height:92%;animation-delay:.24s"></span>
+                    <span class="bar flex-1 origin-bottom rounded-t bg-accent/70" style="height:60%;animation-delay:.32s"></span>
+                    <span class="bar flex-1 origin-bottom rounded-t bg-accent/70" style="height:78%;animation-delay:.4s"></span>
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  ))}
+</section>

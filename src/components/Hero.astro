@@ -1,0 +1,61 @@
+---
+import { site } from '../data/site';
+
+const chips = ['Sensor / IMU', 'MCU · FreeRTOS', 'BLE / MQTT', 'Dato / métrica'];
+---
+
+<header class="relative overflow-hidden pt-16 pb-16 sm:pt-20">
+  <div class="wrap">
+    {site.available && (
+      <div class="mb-6 inline-flex items-center gap-2 rounded-full bg-surface-2 px-4 py-[7px] text-[13px] font-medium text-body">
+        <span class="relative grid h-2 w-2 place-items-center">
+          <span class="absolute h-2 w-2 rounded-full bg-green"></span>
+          <span class="absolute h-2 w-2 animate-ping rounded-full bg-green opacity-60"></span>
+        </span>
+        {site.availableText}
+      </div>
+    )}
+
+    <h1 class="text-[clamp(38px,8vw,60px)] font-bold text-ink">
+      Ingeniero de Software<br />
+      <span
+        class="bg-gradient-to-r from-accent to-accent-2 bg-clip-text text-transparent"
+      >
+        Embebido &amp; IoT
+      </span>
+    </h1>
+
+    <p class="mt-5 max-w-[600px] text-lg text-body sm:text-xl">
+      {site.tagline}
+    </p>
+
+    <div class="mt-8 flex flex-wrap gap-3.5">
+      <a
+        href="#soluciones"
+        class="rounded-full bg-accent px-6 py-3.5 text-[15px] font-semibold text-white shadow-[0_8px_24px_rgba(0,122,255,0.28)] transition hover:-translate-y-0.5"
+      >
+        Ver soluciones
+      </a>
+      <a
+        href="#contacto"
+        class="rounded-full bg-surface-2 px-6 py-3.5 text-[15px] font-semibold text-ink transition hover:-translate-y-0.5"
+      >
+        Contactar
+      </a>
+    </div>
+
+    <!-- Micro-diagrama: sensor → MCU → BLE → dato -->
+    <div
+      class="mt-13 flex flex-wrap items-center gap-2.5 font-mono text-[12.5px] text-muted"
+    >
+      {chips.map((chip, i) => (
+        <>
+          <span class="rounded-xl bg-surface px-4 py-2.5 font-medium text-ink shadow-card">
+            {chip}
+          </span>
+          {i < chips.length - 1 && <span class="text-accent">→</span>}
+        </>
+      ))}
+    </div>
+  </div>
+</header>

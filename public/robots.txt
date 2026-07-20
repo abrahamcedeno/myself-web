@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://freelancer-1de06.web.app/sitemap-index.xml

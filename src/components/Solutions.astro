@@ -1,6 +1,8 @@
 ---
 // Soluciones en lenguaje de CLIENTE: una sección animada por solución.
 // Cuenta QUÉ resuelve y el valor, sin jerga técnica (el stack vive en #stack).
+import { categories } from '../data/categories';
+
 const solutions = [
   {
     id: 'movimiento',
@@ -176,4 +178,27 @@ const solutions = [
       </div>
     </div>
   ))}
+
+  <!-- Explorar por tipo de solución (páginas por categoría) -->
+  <div class="wrap pt-12 pb-4">
+    <div class="rounded-card bg-surface-2 p-7 text-center sm:p-9" data-reveal>
+      <p class="mb-1.5 text-[12.5px] font-semibold tracking-[0.14em] text-accent uppercase">
+        Explora por tipo
+      </p>
+      <h3 class="mb-5 text-[22px] font-bold text-ink">
+        ¿Buscas algo concreto? Filtra por especialidad
+      </h3>
+      <div class="flex flex-wrap justify-center gap-2.5">
+        {categories.map((c) => (
+          <a
+            href={`/soluciones/${c.slug}`}
+            class="inline-flex items-center gap-2 rounded-full bg-surface px-4 py-2 text-[14px] font-medium text-ink shadow-card transition hover:-translate-y-0.5 hover:text-accent"
+          >
+            <span aria-hidden="true">{c.icon}</span>
+            {c.label}
+          </a>
+        ))}
+      </div>
+    </div>
+  </div>
 </section>

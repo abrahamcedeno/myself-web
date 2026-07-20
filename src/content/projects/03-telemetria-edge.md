@@ -5,6 +5,7 @@ summary: >-
   autenticación, publisher/subscriber en Python con QoS y reconexión,
   healthcheck en Bash y endurecimiento básico (secretos fuera de git).
 tags: ['MQTT', 'Docker', 'Linux', 'Bash', 'Python']
+categories: ['iot']
 cover: 3
 order: 3
 ---

@@ -5,6 +5,7 @@ summary: >-
   para buscadores de IA, desplegada en Firebase Hosting y optimizada para móvil
   (Safari/iOS).
 tags: ['HTML/CSS/JS', 'JSON-LD', 'Firebase', 'SEO', 'GEO']
+categories: ['web', 'seo']
 cover: 4
 order: 4
 ---

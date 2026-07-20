@@ -12,6 +12,9 @@ const projects = defineCollection({
     summary: z.string(),
     // Etiquetas de tecnología mostradas en la tarjeta.
     tags: z.array(z.string()),
+    // Categorías de solución a las que pertenece (slugs de src/data/categories.ts).
+    // Alimentan el desplegable de la nav y las páginas /soluciones/<slug>.
+    categories: z.array(z.string()).default([]),
     // Variante de color de la portada: 1 | 2 | 3 | 4.
     cover: z.number().min(1).max(4).default(1),
     // Enlaces opcionales (repo / demo). Si no hay, no se muestran.

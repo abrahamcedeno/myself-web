@@ -5,6 +5,7 @@ summary: >-
   de repeticiones y cálculo de métricas de rendimiento. Filtro Madgwick por
   cuaterniones, Kalman 1D por eje con ZUPT y detección de la fase propulsiva.
 tags: ['Madgwick', 'Kalman 1D', 'Cuaterniones', 'ZUPT', 'Procesado de señal']
+categories: ['techsport', 'iot']
 cover: 2
 order: 2
 ---

@@ -6,6 +6,7 @@ summary: >-
   limitados. Driver de IMU desarrollado desde cero por SPI (FIFO, burst reads,
   ODR) y comunicación BLE GATT, validado con osciloscopio y analizador lógico.
 tags: ['C/C++', 'FreeRTOS', 'ARM Cortex-M4', 'SPI', 'BLE', 'KiCad']
+categories: ['techsport', 'iot']
 cover: 1
 order: 1
 ---

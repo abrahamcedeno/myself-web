@@ -1,0 +1,63 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+import Contact from '../../components/Contact.astro';
+import Footer from '../../components/Footer.astro';
+import { categories } from '../../data/categories';
+
+const all = (await getCollection('projects')).filter((p) => !p.data.draft);
+const countFor = (slug: string) =>
+  all.filter((p) => (p.data.categories ?? []).includes(slug)).length;
+---
+
+<Layout
+  title="Soluciones por tipo — Abraham Cedeño"
+  description="Explora mis soluciones por tipo: GPS y localización, IoT y firmware, TechSport & wearables, diseño web y SEO/GEO."
+>
+  <Nav />
+  <main id="contenido">
+    <section class="py-16 sm:py-20">
+      <div class="wrap">
+        <a
+          href="/#soluciones"
+          class="mb-8 inline-flex items-center gap-1.5 text-sm font-medium text-muted transition-colors hover:text-accent"
+        >
+          <span aria-hidden="true">←</span> Volver al inicio
+        </a>
+
+        <p class="mb-3.5 text-[12.5px] font-semibold tracking-[0.14em] text-accent uppercase" data-reveal>
+          Soluciones
+        </p>
+        <h1 class="text-[clamp(30px,6vw,46px)] font-bold text-ink" data-reveal>Explora por tipo</h1>
+        <p class="mt-4 max-w-[620px] text-[18px] text-body" data-reveal>
+          Elige el tipo de solución que te interesa y verás los proyectos
+          relacionados.
+        </p>
+
+        <div class="mt-12 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {categories.map((c) => (
+            <a
+              href={`/soluciones/${c.slug}`}
+              class="group flex flex-col rounded-card bg-surface p-6 shadow-card transition duration-300 hover:-translate-y-1 hover:shadow-card-lg"
+              data-reveal
+            >
+              <div class="mb-4 grid h-12 w-12 place-items-center rounded-2xl bg-surface-2 text-2xl">
+                <span aria-hidden="true">{c.icon}</span>
+              </div>
+              <h2 class="mb-2 text-lg font-bold text-ink">{c.label}</h2>
+              <p class="flex-1 text-sm text-body">{c.tagline}</p>
+              <span class="mt-5 inline-flex items-center gap-1.5 text-[13.5px] font-semibold text-accent">
+                {countFor(c.slug)} {countFor(c.slug) === 1 ? 'proyecto' : 'proyectos'}
+                <span class="transition-transform duration-300 group-hover:translate-x-1">→</span>
+              </span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <Contact />
+  </main>
+  <Footer />
+</Layout>

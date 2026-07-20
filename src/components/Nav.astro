@@ -1,33 +1,78 @@
 ---
 import ThemeToggle from './ThemeToggle.astro';
+import { categories } from '../data/categories';
 
-const links = [
-  { href: '#sobre', label: 'Sobre mí' },
-  { href: '#soluciones', label: 'Soluciones' },
-  { href: '#servicios', label: 'Servicios' },
-  { href: '#codigo', label: 'Código' },
-  { href: '#ahora', label: 'Ahora' },
-];
+// Enlaces a secciones de la home en absoluto (/#...) para que funcionen también
+// desde las páginas de categoría (/soluciones/...).
 ---
 
 <nav
   class="sticky top-0 z-50 border-b border-sep/70 bg-page/70 backdrop-blur-xl backdrop-saturate-150"
 >
   <div class="wrap flex h-[58px] items-center justify-between">
-    <a href="#" class="font-display text-base font-bold text-ink">
+    <a href="/" class="font-display text-base font-bold text-ink">
       Abraham<span class="text-accent">.</span>Cedeño
     </a>
 
     <div class="hidden items-center gap-7 text-sm font-medium text-body md:flex">
-      {links.map((l) => (
-        <a href={l.href} class="transition-colors hover:text-accent">{l.label}</a>
-      ))}
+      <a href="/#sobre" class="transition-colors hover:text-accent">Sobre mí</a>
+
+      <!-- Desplegable de Soluciones -->
+      <div class="relative" data-dd>
+        <button
+          type="button"
+          data-dd-btn
+          aria-expanded="false"
+          aria-haspopup="true"
+          class="flex items-center gap-1 transition-colors hover:text-accent aria-expanded:text-accent"
+        >
+          Soluciones
+          <svg
+            data-dd-chevron
+            viewBox="0 0 20 20"
+            class="h-3.5 w-3.5 transition-transform duration-200"
+            fill="none" stroke="currentColor" stroke-width="2"
+            stroke-linecap="round" stroke-linejoin="round"
+          >
+            <path d="M5 8l5 5 5-5" />
+          </svg>
+        </button>
+
+        <div
+          data-dd-menu
+          role="menu"
+          class="invisible absolute right-0 top-[calc(100%+10px)] w-64 origin-top translate-y-1 scale-95 rounded-2xl border border-sep bg-surface p-2 opacity-0 shadow-card-lg transition-all duration-150"
+        >
+          <a
+            href="/soluciones"
+            role="menuitem"
+            class="block rounded-xl px-3 py-2 text-[13.5px] font-semibold text-ink transition-colors hover:bg-surface-2"
+          >
+            Todas las soluciones
+          </a>
+          <div class="my-1 h-px bg-sep"></div>
+          {categories.map((c) => (
+            <a
+              href={`/soluciones/${c.slug}`}
+              role="menuitem"
+              class="flex items-center gap-2.5 rounded-xl px-3 py-2 text-[13.5px] text-body transition-colors hover:bg-surface-2 hover:text-accent"
+            >
+              <span aria-hidden="true" class="text-base">{c.icon}</span>
+              {c.label}
+            </a>
+          ))}
+        </div>
+      </div>
+
+      <a href="/#servicios" class="transition-colors hover:text-accent">Servicios</a>
+      <a href="/#codigo" class="transition-colors hover:text-accent">Código</a>
+      <a href="/#ahora" class="transition-colors hover:text-accent">Ahora</a>
     </div>
 
     <div class="flex items-center gap-2">
       <ThemeToggle />
       <a
-        href="#contacto"
+        href="/#contacto"
         class="rounded-full bg-ink px-4 py-2 text-[13.5px] font-semibold text-white transition hover:opacity-90 dark:bg-white dark:text-black"
       >
         Hablemos
@@ -35,3 +80,49 @@ const links = [
     </div>
   </div>
 </nav>
+
+<script>
+  function setupNavDropdowns() {
+    document.querySelectorAll('[data-dd]').forEach((dd) => {
+      if (dd.dataset.ready) return;
+      dd.dataset.ready = '1';
+      const btn = dd.querySelector('[data-dd-btn]');
+      const menu = dd.querySelector('[data-dd-menu]');
+      const chevron = dd.querySelector('[data-dd-chevron]');
+      if (!btn || !menu) return;
+      const hidden = ['invisible', 'opacity-0', 'translate-y-1', 'scale-95'];
+      const close = () => {
+        btn.setAttribute('aria-expanded', 'false');
+        menu.classList.add(...hidden);
+        chevron && chevron.classList.remove('rotate-180');
+      };
+      const open = () => {
+        btn.setAttribute('aria-expanded', 'true');
+        menu.classList.remove(...hidden);
+        chevron && chevron.classList.add('rotate-180');
+      };
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        btn.getAttribute('aria-expanded') === 'true' ? close() : open();
+      });
+      menu.querySelectorAll('a').forEach((a) => a.addEventListener('click', close));
+      dd.__close = close;
+    });
+  }
+  function closeAllDropdowns(except) {
+    document.querySelectorAll('[data-dd]').forEach((dd) => {
+      if (dd !== except && dd.__close) dd.__close();
+    });
+  }
+  if (!window.__navDDInit) {
+    window.__navDDInit = true;
+    document.addEventListener('click', (e) => {
+      const inside = e.target && e.target.closest ? e.target.closest('[data-dd]') : null;
+      closeAllDropdowns(inside);
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeAllDropdowns();
+    });
+  }
+  document.addEventListener('astro:page-load', setupNavDropdowns);
+</script>

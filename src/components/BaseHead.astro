@@ -7,7 +7,7 @@ interface Props {
 }
 
 const {
-  title = `${site.name} — ${site.role}`,
+  title = `${site.name} (${site.legalName}) — ${site.role}`,
   description = site.seoDescription,
 } = Astro.props;
 
@@ -19,7 +19,11 @@ const ogImage = new URL('/og-image.png', Astro.site).href;
 const personLd = {
   '@context': 'https://schema.org',
   '@type': 'Person',
-  name: site.name,
+  name: site.legalName,
+  alternateName: site.name,
+  givenName: 'Abraham',
+  additionalName: 'Ashlyn',
+  familyName: 'Cedeño Holguín',
   jobTitle: site.role,
   description: site.seoDescription,
   url: canonical,
@@ -49,12 +53,15 @@ const personLd = {
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 <link rel="sitemap" href="/sitemap-index.xml" />
 <link rel="canonical" href={canonical} />
+<!-- Señales de idioma para buscadores internacionales (ES + por defecto). -->
+<link rel="alternate" hreflang="es" href={canonical} />
+<link rel="alternate" hreflang="x-default" href={canonical} />
 
 <title>{title}</title>
 <meta name="description" content={description} />
 <meta name="keywords" content={site.keywords.join(', ')} />
-<meta name="author" content={site.name} />
-<meta name="robots" content="index, follow" />
+<meta name="author" content={site.legalName} />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
 <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
 <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)" />
 

@@ -6,6 +6,9 @@
 
 export const site = {
   name: 'Abraham Cedeño',
+  // Nombre legal completo (coincide con LinkedIn y GitHub). Se usa en el SEO
+  // (título, autor, datos estructurados) para posicionar también por él.
+  legalName: 'Ashlyn Abraham Cedeño Holguín',
   role: 'Ingeniero de Software Embebido & IoT',
   location: 'Barcelona, España',
   locale: 'es_ES',
@@ -13,7 +16,7 @@ export const site = {
   tagline:
     'Firmware en C/C++, sistemas en tiempo real y fusión de sensores para dispositivos conectados. Del microcontrolador al dato útil.',
   seoDescription:
-    'Ingeniero de software embebido e IoT freelance en Barcelona. Firmware C/C++ sobre ARM Cortex-M, FreeRTOS, drivers de sensores, BLE y fusión de sensores. Del microcontrolador al dato fiable.',
+    'Ashlyn Abraham Cedeño Holguín (Abraham Cedeño), ingeniero de software embebido e IoT freelance en Barcelona. Firmware C/C++ sobre ARM Cortex-M, FreeRTOS, drivers de sensores, BLE y fusión de sensores. Del microcontrolador al dato fiable.',
 
   // Datos de contacto reales.
   email: 'abraham.ceho@hotmail.com',
@@ -22,6 +25,9 @@ export const site = {
 
   // Palabras clave objetivo (SEO/GEO, mercado España).
   keywords: [
+    'Ashlyn Abraham Cedeño Holguín',
+    'Abraham Cedeño',
+    'Abraham Cedeño ingeniero',
     'ingeniero freelance firmware',
     'desarrollo firmware C/C++',
     'ingeniero IoT Barcelona',

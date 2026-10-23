@@ -24,6 +24,11 @@ export const site = {
   github: 'https://github.com/abrahamcedeno',
   moovia: 'https://moovia.app',
 
+  // URL de la aplicación web de Google Apps Script que recibe el formulario
+  // (termina en /exec). Instrucciones en apps-script/formulario.gs.
+  // Mientras esté vacía, el formulario usa FormSubmit como respaldo.
+  formEndpoint: 'https://script.google.com/macros/s/AKfycby9z10_b-rQR0IUPNsz3GnzpjfBZQ2aBF8yBDiCac9GBgUX1RWVsXKbgspeF7NuAubnjw/exec',
+
   // Palabras clave objetivo (SEO, búsquedas de selección).
   keywords: [
     'Ashlyn Abraham Cedeño Holguín',

@@ -39,4 +39,26 @@ const projects = defineCollection({
   }),
 });
 
-export const collections = { projects };
+// Artículos del blog: src/content/blog/<slug>.md → /blog/<slug>.
+// Para publicar uno nuevo, copia un artículo existente, cambia el nombre del
+// archivo (será la URL) y el bloque de datos del principio.
+const blog = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/blog' }),
+  schema: z.object({
+    // Título del artículo (H1 y <title>). Mejor si contiene la búsqueda objetivo.
+    title: z.string(),
+    // Resumen de ~150 caracteres (meta description y tarjeta del blog).
+    description: z.string(),
+    // Fecha de publicación (AAAA-MM-DD) y, opcional, de última actualización.
+    date: z.coerce.date(),
+    updated: z.coerce.date().optional(),
+    // Servicio relacionado (slug de src/data/services.ts): añade un bloque de
+    // llamada a la acción al final del artículo.
+    service: z.string().optional(),
+    tags: z.array(z.string()).default([]),
+    // true = no se publica.
+    draft: z.boolean().default(false),
+  }),
+});
+
+export const collections = { projects, blog };

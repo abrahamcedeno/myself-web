@@ -1,10 +1,9 @@
 ---
 // Formulario de contacto / presupuesto.
-// Envío sin backend con FormSubmit (https://formsubmit.co), gratis y sin clave:
-// los mensajes llegan a site.email. La PRIMERA vez que alguien envíe el
-// formulario, FormSubmit manda un email de activación a esa dirección; hay que
-// pulsar "Activate" una sola vez. Con JS se envía por AJAX (sin salir de la
-// página); sin JS, el formulario hace un envío normal y vuelve a /gracias.
+// Envío principal: Google Apps Script (site.formEndpoint) → email por Gmail +
+// fila en una hoja de Google. Ver apps-script/formulario.gs.
+// Respaldo si formEndpoint está vacío: FormSubmit (https://formsubmit.co).
+// Con JS se envía sin salir de la página; sin JS, envío normal.
 import { site } from '../data/site';
 import { services } from '../data/services';
 
@@ -15,7 +14,9 @@ interface Props {
   tone?: 'light' | 'onColor';
 }
 const { service, tone = 'light' } = Astro.props;
-const action = `https://formsubmit.co/${site.email}`;
+const useScript = Boolean(site.formEndpoint);
+const action = useScript ? site.formEndpoint : `https://formsubmit.co/${site.email}`;
+const endpoint = useScript ? site.formEndpoint : `https://formsubmit.co/ajax/${site.email}`;
 const next = new URL('/gracias', Astro.site).href;
 const preset = services.find((s) => s.slug === service);
 const field =
@@ -28,7 +29,8 @@ const label = tone === 'onColor' ? 'text-white' : 'text-ink';
   method="POST"
   class="grid gap-4 text-left"
   data-contact-form
-  data-endpoint={`https://formsubmit.co/ajax/${site.email}`}
+  data-endpoint={endpoint}
+  data-mode={useScript ? 'script' : 'formsubmit'}
   data-email={site.email}
 >
   <input type="hidden" name="_subject" value={`Nuevo contacto desde la web${preset ? ` — ${preset.name}` : ''}`} />
@@ -141,11 +143,13 @@ const label = tone === 'onColor' ? 'text-white' : 'text-ink';
         btn.disabled = true;
         status.textContent = 'Enviando…';
         try {
-          const res = await fetch(form.dataset.endpoint!, {
-            method: 'POST',
-            headers: { Accept: 'application/json' },
-            body: new FormData(form),
-          });
+          const fd = new FormData(form);
+          const isScript = form.dataset.mode === 'script';
+          if (isScript) fd.set('_ajax', '1');
+          // Apps Script: cuerpo urlencoded (petición simple, sin preflight CORS).
+          const res = await fetch(form.dataset.endpoint!, isScript
+            ? { method: 'POST', body: new URLSearchParams(fd as any) }
+            : { method: 'POST', headers: { Accept: 'application/json' }, body: fd });
           const data = await res.json().catch(() => ({}));
           if (!res.ok || data.success === 'false' || data.success === false) throw new Error(data.message);
           form.reset();

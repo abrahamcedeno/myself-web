@@ -1,0 +1,72 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+import Footer from '../../components/Footer.astro';
+import { site } from '../../data/site';
+import { serviceBySlug } from '../../data/services';
+import { getPosts, formatDate, readingTime } from '../../data/blog';
+
+const posts = await getPosts();
+const pageUrl = new URL('/blog', Astro.site).href;
+
+const blogLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Blog',
+  name: `Blog de ${site.name}`,
+  url: pageUrl,
+  inLanguage: 'es-ES',
+  author: { '@type': 'Person', name: site.legalName, url: new URL('/', Astro.site).href },
+  blogPost: posts.map((p) => ({
+    '@type': 'BlogPosting',
+    headline: p.data.title,
+    description: p.data.description,
+    datePublished: p.data.date.toISOString(),
+    url: new URL(`/blog/${p.id}`, Astro.site).href,
+  })),
+};
+---
+
+<Layout
+  title={`Blog: webs, sistemas embebidos y paneles de control | ${site.name}`}
+  description="Guías prácticas y precios reales sobre páginas web, desarrollo de dispositivos electrónicos con firmware y BLE, y paneles de control para empresas."
+  schema={[blogLd]}
+>
+  <Nav />
+  <main id="contenido" class="py-16 sm:py-20">
+    <div class="wrap">
+      <p class="mb-3.5 text-[12.5px] font-semibold tracking-[0.14em] text-accent uppercase">Blog</p>
+      <h1 class="max-w-[720px] text-[clamp(34px,6vw,50px)] font-bold text-ink">
+        Guías claras para decidir tu proyecto
+      </h1>
+      <p class="mt-4 mb-12 max-w-[620px] text-lg text-muted">
+        Precios, procesos y decisiones técnicas explicadas sin humo, para que
+        sepas qué pedir y cuánto debería costar.
+      </p>
+
+      <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+        {posts.map((p) => {
+          const svc = p.data.service ? serviceBySlug(p.data.service) : undefined;
+          return (
+            <a
+              href={`/blog/${p.id}`}
+              class="group flex flex-col rounded-card bg-surface p-7 shadow-card transition duration-300 hover:-translate-y-1 hover:shadow-card-lg"
+            >
+              {svc && (
+                <p class="mb-3 font-mono text-[12px] font-medium tracking-wide text-accent uppercase">
+                  {svc.icon} {svc.name}
+                </p>
+              )}
+              <h2 class="text-xl font-bold text-ink group-hover:text-accent">{p.data.title}</h2>
+              <p class="mt-3 flex-1 text-[15px] leading-relaxed text-body">{p.data.description}</p>
+              <p class="mt-5 text-[13px] text-muted">
+                <time datetime={p.data.date.toISOString()}>{formatDate(p.data.date)}</time>
+                {' · '}{readingTime(p.body)} min de lectura
+              </p>
+            </a>
+          );
+        })}
+      </div>
+    </div>
+  </main>
+  <Footer />
+</Layout>

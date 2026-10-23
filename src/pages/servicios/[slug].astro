@@ -5,6 +5,7 @@ import Layout from '../../layouts/Layout.astro';
 import Nav from '../../components/Nav.astro';
 import Footer from '../../components/Footer.astro';
 import Contact from '../../components/Contact.astro';
+import { getPosts } from '../../data/blog';
 import { site } from '../../data/site';
 import { services, formatPrice, type Service } from '../../data/services';
 
@@ -14,6 +15,7 @@ export function getStaticPaths() {
 
 const { service: s } = Astro.props as { service: Service };
 const others = services.filter((o) => o.slug !== s.slug);
+const related = (await getPosts()).filter((p) => p.data.service === s.slug);
 
 const pageUrl = new URL(`/servicios/${s.slug}`, Astro.site).href;
 const home = new URL('/', Astro.site).href;
@@ -315,6 +317,19 @@ const breadcrumbLd = {
     <!-- Otros servicios -->
     <section class="py-22">
       <div class="wrap">
+        {related.length > 0 && (
+          <div class="mb-16">
+            <h2 class="mb-6 text-2xl font-bold text-ink">Artículos relacionados</h2>
+            <div class="grid gap-4 md:grid-cols-2">
+              {related.map((p) => (
+                <a href={`/blog/${p.id}`} class="group rounded-card bg-surface-2 p-6 transition hover:-translate-y-0.5">
+                  <span class="block font-display text-lg font-bold text-ink group-hover:text-accent">{p.data.title} →</span>
+                  <span class="mt-1 block text-[14.5px] text-muted">{p.data.description}</span>
+                </a>
+              ))}
+            </div>
+          </div>
+        )}
         <h2 class="mb-6 text-2xl font-bold text-ink">Otros servicios</h2>
         <div class="grid gap-4 md:grid-cols-2">
           {others.map((o) => (

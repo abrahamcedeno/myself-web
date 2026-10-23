@@ -1,99 +1,52 @@
 ---
-const services = [
-  {
-    icon: '⚙️',
-    title: 'Firmware a medida',
-    body: 'C/C++ sobre ARM Cortex-M, bare-metal o FreeRTOS. Arquitectura HAL / driver / aplicación, máquinas de estados y tiempo real determinista.',
-    span: 'sm:col-span-2 sm:row-span-2',
-    variant: 'dark',
-    tag: 'C/C++',
-  },
-  {
-    icon: '🧭',
-    title: 'Sensores & drivers',
-    body: 'Del datasheet al driver: IMU, SPI/I2C/UART, FIFO y bajo consumo.',
-  },
-  {
-    icon: '📐',
-    title: 'Fusión de sensores',
-    body: 'Madgwick, Kalman, detección de eventos y métricas fiables.',
-    variant: 'accent',
-  },
-  {
-    icon: '📡',
-    title: 'Conectividad IoT',
-    body: 'BLE (GATT), MQTT y telemetría; bases de CAN-bus y RS-485/Modbus para entornos industriales.',
-    span: 'sm:col-span-2',
-  },
-  {
-    icon: '🔬',
-    title: 'Validación HW',
-    body: 'Puesta en marcha de PCB, osciloscopio y analizador lógico.',
-  },
-  {
-    icon: '🖥️',
-    title: 'Web & dashboards',
-    body: 'Landing técnica y paneles de datos para tu producto conectado.',
-  },
-];
+// Servicios freelance: tarjetas que enlazan a la página de cada servicio.
+import { services, formatPrice } from '../data/services';
 
-function tileClass(v?: string) {
-  if (v === 'dark')
-    return 'bg-gradient-to-br from-[#1c1c1e] to-[#2c2c2e] text-white';
-  if (v === 'accent')
-    return 'bg-gradient-to-br from-accent to-accent-2 text-white';
-  return 'bg-surface';
+interface Props {
+  /** Nivel del título de la sección (h1 en /servicios, h2 en la home). */
+  as?: 'h1' | 'h2';
 }
+const { as: Heading = 'h2' } = Astro.props;
 ---
 
 <section id="servicios" class="py-22">
   <div class="wrap">
-    <p class="mb-3.5 text-[12.5px] font-semibold tracking-[0.14em] text-accent uppercase">
-      Qué hago
+    <p class="mb-3.5 text-[12.5px] font-semibold tracking-[0.14em] text-accent uppercase" data-reveal>
+      Servicios
     </p>
-    <h2 class="text-[34px] font-bold text-ink">Servicios de ingeniería</h2>
-    <p class="mt-3.5 mb-10 max-w-[560px] text-[17px] text-muted">
-      La capa donde el software toca el hardware. Elijo lo que mejor encaja con
-      tu producto.
+    <Heading class="max-w-[680px] text-[clamp(28px,5vw,38px)] font-bold text-ink" data-reveal>
+      Qué puedo hacer por tu proyecto
+    </Heading>
+    <p class="mt-3.5 mb-10 max-w-[620px] text-[17px] text-muted" data-reveal>
+      Tres servicios, cada uno con tres niveles de precio cerrado y un proceso
+      claro. Trabajo desde Barcelona con clientes de toda España.
     </p>
 
-    <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-      {services.map((s) => (
-        <div
-          class:list={[
-            'group relative overflow-hidden rounded-card p-6 shadow-card transition duration-300 hover:-translate-y-1 hover:shadow-card-lg',
-            tileClass(s.variant),
-            s.span,
-          ]}
+    <div class="grid gap-5 md:grid-cols-3">
+      {services.map((s, i) => (
+        <a
+          href={`/servicios/${s.slug}`}
+          class="group flex flex-col rounded-card bg-surface p-7 shadow-card transition duration-300 hover:-translate-y-1 hover:shadow-card-lg"
+          data-reveal
+          style={`--reveal-delay:${i * 100}ms`}
         >
-          <div
-            class:list={[
-              'mb-4 grid h-[42px] w-[42px] place-items-center rounded-xl text-xl',
-              s.variant ? 'bg-white/15' : 'bg-surface-2',
-            ]}
-          >
-            {s.icon}
-          </div>
-          <h3
-            class:list={['mb-2 text-lg font-bold', s.variant ? 'text-white' : 'text-ink']}
-          >
-            {s.title}
-          </h3>
-          <p
-            class:list={[
-              'text-sm leading-relaxed',
-              s.variant ? 'text-white/85' : 'text-muted',
-            ]}
-          >
-            {s.body}
-          </p>
-          {s.tag && (
-            <p class="mt-6 font-display text-[40px] font-bold leading-none text-white">
-              {s.tag}
-            </p>
-          )}
-        </div>
+          <span class="mb-5 grid h-12 w-12 place-items-center rounded-xl bg-surface-2 text-2xl" aria-hidden="true">{s.icon}</span>
+          <h3 class="text-xl font-bold text-ink group-hover:text-accent">{s.name}</h3>
+          <p class="mt-2 flex-1 text-[15px] leading-relaxed text-body">{s.card}</p>
+          <ul class="mt-5 grid gap-1.5 border-t border-sep pt-4 text-[13.5px]">
+            {s.tiers.map((t) => (
+              <li class="flex items-baseline justify-between gap-3">
+                <span class="text-muted">{t.name}</span>
+                <span class="font-semibold text-ink">desde {formatPrice(t.price)}</span>
+              </li>
+            ))}
+          </ul>
+          <span class="mt-5 text-[14.5px] font-semibold text-accent">
+            Ver niveles y proceso <span class="inline-block transition-transform group-hover:translate-x-1">→</span>
+          </span>
+        </a>
       ))}
     </div>
+    <p class="mt-5 text-[13px] text-muted">Precios orientativos, IVA no incluido.</p>
   </div>
 </section>

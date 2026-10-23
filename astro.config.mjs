@@ -14,13 +14,16 @@ export default defineConfig({
   site: SITE,
   // Salida 100% estática: sin servidor que mantener, coste ~0 y máximo rendimiento.
   output: 'static',
+  // Sin barra final: coincide con firebase.json (trailingSlash: false) y con
+  // las URLs canónicas, para que Google no vea duplicados.
+  trailingSlash: 'never',
   // Preparado para futura versión en inglés sin rehacer nada.
   i18n: {
     defaultLocale: 'es',
     locales: ['es', 'en'],
     routing: { prefixDefaultLocale: false },
   },
-  integrations: [sitemap()],
+  integrations: [sitemap({ filter: (page) => !page.includes('/soluciones') && !page.includes('/gracias') })],
   vite: {
     plugins: [tailwindcss()],
   },

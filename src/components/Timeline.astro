@@ -1,0 +1,61 @@
+---
+const items = [
+  {
+    period: 'Ago 2025 — actualidad',
+    title: 'Fundador y responsable técnico',
+    org: 'MOOVIA · wearable IoT para entrenamiento de fuerza',
+    body: 'Hardware, firmware, algoritmo y app de prueba. Prototipo funcional con usuarios de prueba y contacto con fabricante para industrializarlo.',
+  },
+  {
+    period: 'Sep 2025 — actualidad',
+    title: 'Desarrollador e ingeniero freelance',
+    org: 'Autónomo · webs, sistemas embebidos y paneles de control',
+    body: 'Webs, CRM, cuadros de mando y automatización de procesos para clientes de salud, automoción y comercio, de los requisitos a la entrega.',
+  },
+  {
+    period: 'Feb 2026',
+    title: 'Grado en Ingeniería en Organización de las TIC',
+    org: 'La Salle Campus Barcelona · Universitat Ramon Llull',
+    body: 'Trabajo de fin de grado sobre el sistema MOOVIA. Base en programación, electrónica, redes, IoT y gestión de proyectos.',
+  },
+  {
+    period: 'Oct 2024 — Jul 2025',
+    title: 'Asistente de proyecto — Datos y TI',
+    org: "Institut Municipal d'Informàtica · Ajuntament de Barcelona",
+    body: '800 horas automatizando indicadores con Power BI, VBA y Python, y documentando requisitos para el cliente interno.',
+  },
+];
+---
+
+<section id="trayectoria" class="bg-surface-2 py-22">
+  <div class="wrap">
+    <p class="mb-3.5 text-[12.5px] font-semibold tracking-[0.14em] text-accent uppercase" data-reveal>
+      Trayectoria
+    </p>
+    <h2 class="text-[clamp(28px,5vw,38px)] font-bold text-ink" data-reveal>
+      De los datos al hardware
+    </h2>
+    <p class="mt-3.5 mb-10 max-w-[600px] text-[17px] text-muted" data-reveal>
+      Un camino poco lineal que me ha dado visión de producto completa.
+    </p>
+
+    <ol class="relative grid gap-6 border-l-2 border-sep pl-7 sm:pl-9">
+      {items.map((it, i) => (
+        <li class="relative" data-reveal style={`--reveal-delay:${i * 80}ms`}>
+          <span
+            class:list={[
+              'absolute top-6 -left-[37px] h-3.5 w-3.5 rounded-full ring-4 ring-surface-2 sm:-left-[45px]',
+              i === 0 ? 'bg-accent' : 'bg-muted',
+            ]}
+          ></span>
+          <div class="rounded-card bg-surface p-6 shadow-card">
+            <p class="font-mono text-[12.5px] text-accent">{it.period}</p>
+            <h3 class="mt-1.5 text-lg font-bold text-ink">{it.title}</h3>
+            <p class="text-[14px] font-medium text-muted">{it.org}</p>
+            <p class="mt-2.5 text-[15px] text-body">{it.body}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>

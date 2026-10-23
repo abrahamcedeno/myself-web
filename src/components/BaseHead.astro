@@ -1,18 +1,32 @@
 ---
 import { site } from '../data/site';
+import { services } from '../data/services';
 
 interface Props {
   title?: string;
   description?: string;
+  /** Ruta de la imagen para redes (por defecto /og-image.png). */
+  image?: string;
+  /** Palabras clave específicas de la página (se suman a las generales). */
+  keywords?: readonly string[];
+  /** Datos estructurados JSON-LD adicionales de la página. */
+  schema?: object[];
+  /** No indexar (p. ej. /gracias). */
+  noindex?: boolean;
 }
 
 const {
-  title = `${site.name} (${site.legalName}) — ${site.role}`,
+  title = `${site.name} — Desarrollador freelance en Barcelona: webs, sistemas embebidos y paneles de control`,
   description = site.seoDescription,
+  image = '/og-image.png',
+  keywords = [],
+  schema = [],
+  noindex = false,
 } = Astro.props;
 
 const canonical = new URL(Astro.url.pathname, Astro.site).href;
-const ogImage = new URL('/og-image.png', Astro.site).href;
+const ogImage = new URL(image, Astro.site).href;
+const allKeywords = [...keywords, ...site.keywords];
 
 // Datos estructurados JSON-LD (schema.org/Person). Ayuda a Google y a los
 // asistentes de IA a entender quién eres y qué haces (SEO + GEO).
@@ -26,7 +40,7 @@ const personLd = {
   familyName: 'Cedeño Holguín',
   jobTitle: site.role,
   description: site.seoDescription,
-  url: canonical,
+  url: new URL('/', Astro.site).href,
   email: `mailto:${site.email}`,
   address: {
     '@type': 'PostalAddress',
@@ -34,6 +48,8 @@ const personLd = {
     addressCountry: 'ES',
   },
   sameAs: [site.linkedin, site.github],
+  worksFor: { '@type': 'Organization', name: 'MOOVIA', url: site.moovia },
+  alumniOf: { '@type': 'CollegeOrUniversity', name: 'La Salle Campus Barcelona — Universitat Ramon Llull' },
   knowsAbout: [
     'Firmware embebido',
     'C/C++',
@@ -43,8 +59,21 @@ const personLd = {
     'BLE',
     'MQTT',
     'IoT',
-    'Edge AI',
+    'Seguridad IoT',
+    'Diseño de PCB',
+    'KiCad',
+    'Desarrollo web',
+    'SEO y GEO',
+    'Paneles de control y dashboards',
   ],
+  makesOffer: services.map((sv) => ({
+    '@type': 'Offer',
+    itemOffered: {
+      '@type': 'Service',
+      name: sv.serviceType,
+      url: new URL(`/servicios/${sv.slug}`, Astro.site).href,
+    },
+  })),
 };
 ---
 
@@ -59,9 +88,9 @@ const personLd = {
 
 <title>{title}</title>
 <meta name="description" content={description} />
-<meta name="keywords" content={site.keywords.join(', ')} />
+<meta name="keywords" content={allKeywords.join(', ')} />
 <meta name="author" content={site.legalName} />
-<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+<meta name="robots" content={noindex ? 'noindex, follow' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'} />
 <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
 <meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)" />
 
@@ -88,3 +117,4 @@ const personLd = {
 
 <meta name="generator" content={Astro.generator} />
 <script type="application/ld+json" set:html={JSON.stringify(personLd)} />
+{schema.map((ld) => <script type="application/ld+json" set:html={JSON.stringify(ld)} />)}

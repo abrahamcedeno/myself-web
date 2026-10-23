@@ -1,0 +1,36 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+import Services from '../../components/Services.astro';
+import Contact from '../../components/Contact.astro';
+import Footer from '../../components/Footer.astro';
+import { site } from '../../data/site';
+import { services } from '../../data/services';
+
+const pageUrl = new URL('/servicios', Astro.site).href;
+const listLd = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: `Servicios de ${site.name}`,
+  url: pageUrl,
+  itemListElement: services.map((s, i) => ({
+    '@type': 'ListItem',
+    position: i + 1,
+    name: s.serviceType,
+    url: new URL(`/servicios/${s.slug}`, Astro.site).href,
+  })),
+};
+---
+
+<Layout
+  title={`Servicios freelance: webs, sistemas embebidos y paneles de control | ${site.name}`}
+  description="Desarrollo de páginas web, sistemas embebidos (firmware, BLE, PCB) y paneles de control a medida. Tres niveles de precio por servicio y un proceso claro. Barcelona y remoto."
+  schema={[listLd]}
+>
+  <Nav />
+  <main id="contenido">
+    <Services as="h1" />
+    <Contact />
+  </main>
+  <Footer />
+</Layout>

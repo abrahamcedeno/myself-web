@@ -1,61 +1,102 @@
 ---
 import { site } from '../data/site';
+import { services, formatPrice } from '../data/services';
 
-const chips = ['Sensor / IMU', 'MCU · FreeRTOS', 'BLE / MQTT', 'Dato / métrica'];
+// Cifras reales (ver src/content/projects/*.md para el detalle y el contexto).
+const stats = [
+  { value: '999 Hz', label: 'captura de señal sin pérdidas en MOOVIA' },
+  { value: '0,03 m/s', label: 'de diferencia frente a un sistema VBT comercial' },
+  { value: '+20', label: 'contactos semanales para un cliente con su nuevo CRM web' },
+  { value: 'Días → seg.', label: 'para obtener KPIs en el Ayuntamiento de Barcelona' },
+];
 ---
 
-<header class="relative overflow-hidden pt-16 pb-16 sm:pt-20">
+<header class="relative overflow-hidden pt-12 pb-16 sm:pt-16">
   <div class="wrap">
-    {site.available && (
-      <div class="mb-6 inline-flex items-center gap-2 rounded-full bg-surface-2 px-4 py-[7px] text-[13px] font-medium text-body">
-        <span class="relative grid h-2 w-2 place-items-center">
-          <span class="absolute h-2 w-2 rounded-full bg-green"></span>
-          <span class="absolute h-2 w-2 animate-ping rounded-full bg-green opacity-60"></span>
-        </span>
-        {site.availableText}
-      </div>
-    )}
+    <div class="grid items-center gap-10 md:grid-cols-[1.05fr_1fr] md:gap-12">
+      <div>
+        {site.available && (
+          <div class="mb-6 inline-flex items-center gap-2 rounded-full bg-surface-2 px-4 py-[7px] text-[13px] font-medium text-body">
+            <span class="relative grid h-2 w-2 place-items-center">
+              <span class="absolute h-2 w-2 rounded-full bg-green"></span>
+              <span class="absolute h-2 w-2 animate-ping rounded-full bg-green opacity-60"></span>
+            </span>
+            {site.availableText}
+          </div>
+        )}
 
-    <h1 class="text-[clamp(38px,8vw,60px)] font-bold text-ink">
-      Ingeniero de Software<br />
-      <span
-        class="bg-gradient-to-r from-accent to-accent-2 bg-clip-text text-transparent"
-      >
-        Embebido &amp; IoT
-      </span>
-    </h1>
-
-    <p class="mt-5 max-w-[600px] text-lg text-body sm:text-xl">
-      {site.tagline}
-    </p>
-
-    <div class="mt-8 flex flex-wrap gap-3.5">
-      <a
-        href="#soluciones"
-        class="rounded-full bg-accent px-6 py-3.5 text-[15px] font-semibold text-white shadow-[0_8px_24px_rgba(0,122,255,0.28)] transition hover:-translate-y-0.5"
-      >
-        Ver soluciones
-      </a>
-      <a
-        href="#contacto"
-        class="rounded-full bg-surface-2 px-6 py-3.5 text-[15px] font-semibold text-ink transition hover:-translate-y-0.5"
-      >
-        Contactar
-      </a>
-    </div>
-
-    <!-- Micro-diagrama: sensor → MCU → BLE → dato -->
-    <div
-      class="mt-13 flex flex-wrap items-center gap-2.5 font-mono text-[12.5px] text-muted"
-    >
-      {chips.map((chip, i) => (
-        <>
-          <span class="rounded-xl bg-surface px-4 py-2.5 font-medium text-ink shadow-card">
-            {chip}
+        <p class="mb-2 font-mono text-[13px] font-medium text-muted">Hola, soy</p>
+        <h1 class="text-[clamp(40px,8vw,64px)] font-bold text-ink">
+          {site.name}
+        </h1>
+        <p class="mt-2 font-display text-[clamp(22px,4vw,30px)] font-semibold">
+          <span class="bg-gradient-to-r from-accent to-accent-2 bg-clip-text text-transparent">
+            {site.role}
           </span>
-          {i < chips.length - 1 && <span class="text-accent">→</span>}
-        </>
-      ))}
+        </p>
+
+        <p class="mt-5 max-w-[560px] text-lg text-body">
+          {site.tagline}
+        </p>
+
+        <div class="mt-8 flex flex-wrap gap-3">
+          <a
+            href="#servicios"
+            class="rounded-full bg-accent px-6 py-3.5 text-[15px] font-semibold text-white shadow-[0_8px_24px_rgba(0,122,255,0.28)] transition hover:-translate-y-0.5"
+          >
+            Ver servicios
+          </a>
+          <a
+            href="#contacto"
+            class="rounded-full bg-surface-2 px-6 py-3.5 text-[15px] font-semibold text-ink transition hover:-translate-y-0.5"
+          >
+            Pedir presupuesto
+          </a>
+          <a
+            href={site.linkedin} target="_blank" rel="noopener"
+            class="rounded-full bg-surface-2 px-6 py-3.5 text-[15px] font-semibold text-ink transition hover:-translate-y-0.5"
+          >
+            LinkedIn ↗
+          </a>
+        </div>
+      </div>
+
+      <!-- Servicios (sustituye a la foto: al cliente le interesa qué hago, no quién sale en la imagen) -->
+      <div class="rounded-card bg-surface-2 p-5 sm:p-6">
+        <p class="mb-3 px-1 font-mono text-[12px] font-medium tracking-wide text-accent uppercase">Servicios freelance</p>
+        <ul class="grid gap-2.5">
+          {services.map((sv) => (
+            <li>
+              <a
+                href={`/servicios/${sv.slug}`}
+                class="group flex items-center gap-4 rounded-2xl bg-surface p-4 shadow-card transition hover:-translate-y-0.5 hover:shadow-card-lg"
+              >
+                <span class="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-surface-2 text-xl" aria-hidden="true">{sv.icon}</span>
+                <span class="min-w-0 flex-1">
+                  <span class="block font-display text-[16.5px] font-bold text-ink group-hover:text-accent">{sv.name}</span>
+                  <span class="block text-[13px] text-muted">desde {formatPrice(sv.tiers[0].price)} · 3 niveles</span>
+                </span>
+                <span class="text-accent transition-transform group-hover:translate-x-1" aria-hidden="true">→</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
+
+    <!-- Cifras -->
+    <dl class="mt-16 grid grid-cols-2 gap-3 lg:grid-cols-4">
+      {stats.map((s, i) => (
+        <div
+          class="rounded-2xl bg-surface-2 p-5"
+          data-reveal
+          style={`--reveal-delay:${i * 80}ms`}
+        >
+          <dt class="sr-only">{s.label}</dt>
+          <dd class="font-display text-[clamp(24px,4vw,32px)] font-bold text-ink">{s.value}</dd>
+          <dd class="mt-1 text-[13px] leading-snug text-muted">{s.label}</dd>
+        </div>
+      ))}
+    </dl>
   </div>
 </header>

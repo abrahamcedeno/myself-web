@@ -1,93 +1,61 @@
 ---
 import { site } from '../data/site';
+import ContactForm from './ContactForm.astro';
 
-// El formulario usa Web3Forms (envío sin backend, plan gratuito). Crea tu clave
-// gratis en https://web3forms.com y pégala en WEB3FORMS_KEY. Si lo dejas vacío,
-// el formulario queda deshabilitado y solo se muestran los enlaces directos.
-const WEB3FORMS_KEY = '';
+interface Props {
+  /** slug del servicio preseleccionado en el formulario. */
+  service?: string;
+}
+const { service } = Astro.props;
+
+const links = [
+  { label: 'Email', value: site.email, href: `mailto:${site.email}`, external: false },
+  { label: 'LinkedIn', value: 'Ashlyn Abraham Cedeño Holguín', href: site.linkedin, external: true },
+  { label: 'GitHub', value: 'github.com/abrahamcedeno', href: site.github, external: true },
+];
 ---
 
-<section id="contacto" class="py-22">
-  <div class="wrap max-w-[720px] text-center">
-    <p class="mb-3.5 text-[12.5px] font-semibold tracking-[0.14em] text-accent uppercase">
-      Contacto
-    </p>
-    <h2 class="text-[clamp(28px,6vw,42px)] font-bold text-ink">
-      ¿Tienes un dispositivo que medir,<br class="hidden sm:inline" /> conectar o
-      hacer más inteligente?
-    </h2>
-    <p class="mx-auto mt-4 mb-8 max-w-[520px] text-lg text-muted">
-      Escríbeme y lo vemos. Respondo rápido.
-    </p>
-
-    {WEB3FORMS_KEY ? (
-      <form
-        action="https://api.web3forms.com/submit"
-        method="POST"
-        class="mx-auto grid max-w-[520px] gap-3.5 text-left"
-      >
-        <input type="hidden" name="access_key" value={WEB3FORMS_KEY} />
-        <input type="hidden" name="subject" value="Nuevo mensaje desde tu web" />
-        <input type="checkbox" name="botcheck" class="hidden" tabindex="-1" autocomplete="off" />
-
-        <div class="grid gap-3.5 sm:grid-cols-2">
-          <label class="grid gap-1.5">
-            <span class="text-sm font-medium text-ink">Nombre</span>
-            <input
-              type="text" name="name" required autocomplete="name"
-              class="rounded-xl border border-sep bg-surface px-4 py-3 text-sm text-ink outline-none focus:border-accent"
-            />
-          </label>
-          <label class="grid gap-1.5">
-            <span class="text-sm font-medium text-ink">Email</span>
-            <input
-              type="email" name="email" required autocomplete="email"
-              class="rounded-xl border border-sep bg-surface px-4 py-3 text-sm text-ink outline-none focus:border-accent"
-            />
-          </label>
+<section id="contacto" class="bg-surface-2 py-22">
+  <div class="wrap">
+    <div class="grid gap-10 md:grid-cols-[1.5fr_1fr] md:gap-12">
+      <div>
+        <p class="mb-3.5 text-[12.5px] font-semibold tracking-[0.14em] text-accent uppercase" data-reveal>
+          Contacto
+        </p>
+        <h2 class="text-[clamp(28px,6vw,42px)] font-bold text-ink" data-reveal>
+          ¿Tienes un proyecto en mente?
+        </h2>
+        <p class="mt-4 mb-8 max-w-[560px] text-lg text-muted" data-reveal>
+          Una web, un dispositivo o un panel de control: cuéntame qué necesitas y
+          te respondo con cómo lo haría, cuánto costaría y en cuánto tiempo.
+        </p>
+        <div class="rounded-card bg-surface p-6 shadow-card sm:p-8" data-reveal>
+          <ContactForm service={service} />
         </div>
-        <label class="grid gap-1.5">
-          <span class="text-sm font-medium text-ink">Mensaje</span>
-          <textarea
-            name="message" required rows="4"
-            class="resize-y rounded-xl border border-sep bg-surface px-4 py-3 text-sm text-ink outline-none focus:border-accent"
-          ></textarea>
-        </label>
-        <label class="flex items-start gap-2.5 text-[13px] text-muted">
-          <input type="checkbox" name="consent" required class="mt-1" />
-          <span>
-            Acepto que mis datos se usen únicamente para responder a este mensaje
-            (ver <a href="/privacidad" class="text-accent underline">Privacidad</a>).
-          </span>
-        </label>
-        <button
-          type="submit"
-          class="mt-1 justify-self-start rounded-full bg-accent px-6 py-3.5 text-[15px] font-semibold text-white shadow-[0_8px_24px_rgba(0,122,255,0.28)] transition hover:-translate-y-0.5"
-        >
-          Enviar mensaje
-        </button>
-      </form>
-    ) : (
-      <div class="flex flex-wrap justify-center gap-3.5">
-        <a
-          href={`mailto:${site.email}`}
-          class="rounded-full bg-accent px-6 py-3.5 text-[15px] font-semibold text-white shadow-[0_8px_24px_rgba(0,122,255,0.28)] transition hover:-translate-y-0.5"
-        >
-          Enviar email
-        </a>
-        <a
-          href={site.linkedin} target="_blank" rel="noopener"
-          class="rounded-full bg-surface-2 px-6 py-3.5 text-[15px] font-semibold text-ink transition hover:-translate-y-0.5"
-        >
-          LinkedIn
-        </a>
-        <a
-          href={site.github} target="_blank" rel="noopener"
-          class="rounded-full bg-surface-2 px-6 py-3.5 text-[15px] font-semibold text-ink transition hover:-translate-y-0.5"
-        >
-          GitHub
-        </a>
       </div>
-    )}
+
+      <aside class="grid content-start gap-3 md:pt-[148px]">
+        <p class="font-mono text-[12px] font-medium tracking-wide text-accent uppercase">¿Prefieres otro canal?</p>
+        {links.map((l, i) => (
+          <a
+            href={l.href}
+            target={l.external ? '_blank' : undefined}
+            rel={l.external ? 'noopener' : undefined}
+            class="group flex items-center justify-between gap-4 rounded-2xl bg-surface p-5 shadow-card transition hover:-translate-y-0.5 hover:shadow-card-lg"
+            data-reveal
+            style={`--reveal-delay:${i * 70}ms`}
+          >
+            <span class="min-w-0">
+              <span class="block font-mono text-[12px] font-medium tracking-wide text-accent uppercase">{l.label}</span>
+              <span class="block truncate text-[15px] font-semibold text-ink">{l.value}</span>
+            </span>
+            <span class="text-accent transition-transform group-hover:translate-x-1" aria-hidden="true">{l.external ? '↗' : '→'}</span>
+          </a>
+        ))}
+        <p class="mt-2 text-[14px] text-muted">
+          ¿Quieres ver precios antes? <a href="/servicios" class="font-semibold text-accent hover:underline">Consulta los servicios y sus niveles</a>.
+        </p>
+      </aside>
+    </div>
   </div>
 </section>

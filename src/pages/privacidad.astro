@@ -11,9 +11,9 @@ import { site } from '../data/site';
     <div class="wrap max-w-[720px]">
       <h1 class="text-[34px] font-bold text-ink">Aviso legal y política de privacidad</h1>
       <p class="mt-6 text-body">
-        Esta web es la página personal de {site.name}, {site.role.toLowerCase()},
-        con sede en {site.location}. Su finalidad es informativa y de contacto
-        profesional.
+        Esta web es la página profesional de {site.name}, desarrollador e
+        ingeniero freelance con sede en {site.location}. Su finalidad es
+        informar de sus servicios y permitir el contacto con clientes.
       </p>
 
       <h2 class="mt-10 text-2xl font-bold text-ink">Titular del sitio web</h2>
@@ -23,27 +23,26 @@ import { site } from '../data/site';
         del titular:
       </p>
       <ul class="mt-3 grid gap-1.5 text-body">
-        <li><strong class="text-ink">Titular:</strong> {site.name}</li>
-        <li><strong class="text-ink">DNI:</strong> 60465396Y</li>
-        <li><strong class="text-ink">Domicilio:</strong> C/ Prat 20-27, Barcelona, España</li>
+        <li><strong class="text-ink">Titular:</strong> {site.legalName} ({site.name})</li>
         <li>
           <strong class="text-ink">Email:</strong>
           <a href={`mailto:${site.email}`} class="text-accent underline">{site.email}</a>
         </li>
-        <li><strong class="text-ink">Actividad:</strong> servicios profesionales de ingeniería de software embebido e IoT.</li>
+        <li><strong class="text-ink">Actividad:</strong> prestación de servicios freelance de desarrollo web, sistemas embebidos y paneles de control.</li>
       </ul>
 
       <h2 class="mt-10 text-2xl font-bold text-ink">Datos que se recogen</h2>
       <p class="mt-3 text-body">
         Si utilizas el formulario de contacto, se tratan únicamente los datos que
-        facilites (nombre, email y el contenido de tu mensaje) con la única
-        finalidad de responder a tu consulta. No se elaboran perfiles ni se usan
+        facilites (nombre, email, el servicio que te interesa y el contenido de
+        tu mensaje) con la única finalidad de responder a tu consulta y, en su
+        caso, prepararte un presupuesto. No se elaboran perfiles ni se usan
         con fines publicitarios.
       </p>
 
       <h2 class="mt-10 text-2xl font-bold text-ink">Responsable del tratamiento</h2>
       <p class="mt-3 text-body">
-        El responsable del tratamiento de tus datos es {site.name}, con los datos
+        El responsable del tratamiento de tus datos es {site.legalName}, con los datos
         de contacto indicados más arriba. Puedes dirigirte a
         <a href={`mailto:${site.email}`} class="text-accent underline">{site.email}</a>
         para cualquier cuestión relacionada con tus datos personales.
@@ -52,15 +51,18 @@ import { site } from '../data/site';
       <h2 class="mt-10 text-2xl font-bold text-ink">Base legal y conservación</h2>
       <p class="mt-3 text-body">
         La base legal es tu consentimiento, que otorgas al marcar la casilla del
-        formulario. Los datos se conservan el tiempo necesario para gestionar la
+        formulario, y, si llegamos a trabajar juntos, la aplicación de medidas
+        precontractuales a petición tuya. Los datos se conservan el tiempo necesario para gestionar la
         comunicación y se eliminan cuando dejan de ser necesarios.
       </p>
 
       <h2 class="mt-10 text-2xl font-bold text-ink">Prestadores de servicios y transferencias internacionales</h2>
       <p class="mt-3 text-body">
         Este sitio está alojado en Firebase Hosting (Google). Si utilizas el
-        formulario de contacto, el envío se gestiona mediante Web3Forms, que actúa
-        como encargado del tratamiento. Ambos proveedores pueden implicar
+        formulario de contacto, el envío se gestiona mediante FormSubmit
+        (formsubmit.co), que reenvía el mensaje al correo del titular y actúa como
+        encargado del tratamiento. El mensaje se recibe en una cuenta de correo de
+        Microsoft Outlook. Estos proveedores pueden implicar
         transferencias internacionales de datos fuera del Espacio Económico
         Europeo, amparadas en las garantías previstas por el RGPD (cláusulas
         contractuales tipo y marcos de adecuación aplicables). No se ceden datos a
@@ -81,7 +83,7 @@ import { site } from '../data/site';
       <h2 class="mt-10 text-2xl font-bold text-ink">Propiedad intelectual</h2>
       <p class="mt-3 text-body">
         Los contenidos de esta web (textos, diseño y código) son titularidad de
-        {site.name}, salvo indicación en contrario. Queda prohibida su
+        {site.legalName}, salvo indicación en contrario. Queda prohibida su
         reproducción o distribución sin autorización previa.
       </p>
 
@@ -91,7 +93,7 @@ import { site } from '../data/site';
       </p>
 
       <p class="mt-10 text-sm text-muted">
-        Última actualización: 21 de julio de 2026.
+        Última actualización: 23 de octubre de 2026.
       </p>
 
       <p class="mt-8">

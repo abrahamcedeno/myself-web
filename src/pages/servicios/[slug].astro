@@ -1,0 +1,334 @@
+---
+// Página de cada servicio (SEO + GEO): /servicios/<slug>.
+// El contenido vive en src/data/services.ts.
+import Layout from '../../layouts/Layout.astro';
+import Nav from '../../components/Nav.astro';
+import Footer from '../../components/Footer.astro';
+import Contact from '../../components/Contact.astro';
+import { site } from '../../data/site';
+import { services, formatPrice, type Service } from '../../data/services';
+
+export function getStaticPaths() {
+  return services.map((s) => ({ params: { slug: s.slug }, props: { service: s } }));
+}
+
+const { service: s } = Astro.props as { service: Service };
+const others = services.filter((o) => o.slug !== s.slug);
+
+const pageUrl = new URL(`/servicios/${s.slug}`, Astro.site).href;
+const home = new URL('/', Astro.site).href;
+
+// --- Datos estructurados -----------------------------------------------------
+const serviceLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Service',
+  '@id': `${pageUrl}#servicio`,
+  name: s.h1,
+  serviceType: s.serviceType,
+  description: s.answer,
+  url: pageUrl,
+  image: new URL(s.ogImage, Astro.site).href,
+  provider: {
+    '@type': 'Person',
+    name: site.legalName,
+    alternateName: site.name,
+    url: home,
+    email: `mailto:${site.email}`,
+    address: { '@type': 'PostalAddress', addressLocality: 'Barcelona', addressCountry: 'ES' },
+  },
+  areaServed: [
+    { '@type': 'City', name: 'Barcelona' },
+    { '@type': 'Country', name: 'España' },
+  ],
+  availableLanguage: ['es', 'en'],
+  hasOfferCatalog: {
+    '@type': 'OfferCatalog',
+    name: `${s.name}: niveles y precios`,
+    itemListElement: s.tiers.map((t) => ({
+      '@type': 'Offer',
+      name: t.name,
+      description: `${t.ideal} Incluye: ${t.includes.join('; ')}. Entrega: ${t.delivery}.`,
+      url: `${pageUrl}#precios`,
+      priceCurrency: 'EUR',
+      price: t.price,
+      priceSpecification: {
+        '@type': 'PriceSpecification',
+        minPrice: t.price,
+        priceCurrency: 'EUR',
+        valueAddedTaxIncluded: false,
+      },
+      availability: 'https://schema.org/InStock',
+    })),
+  },
+};
+
+const faqLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: s.faqs.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+};
+
+const breadcrumbLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Inicio', item: home },
+    { '@type': 'ListItem', position: 2, name: 'Servicios', item: new URL('/servicios', Astro.site).href },
+    { '@type': 'ListItem', position: 3, name: s.name, item: pageUrl },
+  ],
+};
+---
+
+<Layout
+  title={s.metaTitle}
+  description={s.metaDescription}
+  image={s.ogImage}
+  keywords={s.keywords}
+  schema={[serviceLd, faqLd, breadcrumbLd]}
+>
+  <Nav />
+  <main id="contenido">
+    <!-- Cabecera -->
+    <header class="pt-10 pb-16 sm:pt-14">
+      <div class="wrap">
+        <nav aria-label="Ruta" class="mb-8 text-[13px] text-muted">
+          <ol class="flex flex-wrap items-center gap-1.5">
+            <li><a href="/" class="hover:text-accent">Inicio</a></li>
+            <li aria-hidden="true">›</li>
+            <li><a href="/servicios" class="hover:text-accent">Servicios</a></li>
+            <li aria-hidden="true">›</li>
+            <li class="text-ink" aria-current="page">{s.name}</li>
+          </ol>
+        </nav>
+
+        <div class="grid items-start gap-10 md:grid-cols-[1.25fr_1fr] md:gap-12">
+          <div>
+            <p class="mb-3.5 text-[12.5px] font-semibold tracking-[0.14em] text-accent uppercase">
+              {s.icon}&nbsp; Servicio freelance · Barcelona y remoto
+            </p>
+            <h1 class="text-[clamp(34px,6.4vw,54px)] font-bold text-ink">{s.h1}</h1>
+            <p class="mt-5 max-w-[580px] text-lg text-body">{s.lead}</p>
+            <div class="mt-8 flex flex-wrap gap-3">
+              <a
+                href="#contacto"
+                class="rounded-full bg-accent px-6 py-3.5 text-[15px] font-semibold text-white shadow-[0_8px_24px_rgba(0,122,255,0.28)] transition hover:-translate-y-0.5"
+              >
+                Pedir presupuesto
+              </a>
+              <a
+                href="#precios"
+                class="rounded-full bg-surface-2 px-6 py-3.5 text-[15px] font-semibold text-ink transition hover:-translate-y-0.5"
+              >
+                Ver precios
+              </a>
+            </div>
+          </div>
+
+          <aside class="rounded-card bg-surface-2 p-6 sm:p-7">
+            <p class="mb-2 font-mono text-[12px] font-medium tracking-wide text-accent uppercase">En resumen</p>
+            <p class="text-[15px] leading-relaxed text-ink">{s.answer}</p>
+          </aside>
+        </div>
+      </div>
+    </header>
+
+    <!-- Para quién -->
+    <section class="pb-20" aria-labelledby="para-quien">
+      <div class="wrap">
+        <h2 id="para-quien" class="mb-6 text-[clamp(24px,4vw,30px)] font-bold text-ink" data-reveal>Para quién es</h2>
+        <ul class="grid gap-3 md:grid-cols-3">
+          {s.forWho.map((f, i) => (
+            <li class="flex gap-3 rounded-2xl bg-surface p-5 text-[15px] text-body shadow-card" data-reveal style={`--reveal-delay:${i * 80}ms`}>
+              <span class="mt-[9px] h-1.5 w-1.5 shrink-0 rounded-full bg-accent"></span>
+              <span>{f}</span>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </section>
+
+    <!-- Precios -->
+    <section id="precios" class="bg-surface-2 py-22" aria-labelledby="precios-h">
+      <div class="wrap">
+        <p class="mb-3.5 text-[12.5px] font-semibold tracking-[0.14em] text-accent uppercase" data-reveal>Precios</p>
+        <h2 id="precios-h" class="text-[clamp(28px,5vw,38px)] font-bold text-ink" data-reveal>
+          Tres niveles, precio cerrado
+        </h2>
+        <p class="mt-3.5 mb-10 max-w-[620px] text-[17px] text-muted" data-reveal>
+          Precios orientativos «desde», IVA no incluido. Antes de empezar recibes
+          por escrito el alcance, el precio final y las fechas.
+        </p>
+
+        <div class="grid gap-5 lg:grid-cols-3">
+          {s.tiers.map((t, i) => (
+            <article
+              class:list={[
+                'relative flex flex-col rounded-card p-7 shadow-card',
+                t.featured ? 'bg-ink text-page ring-2 ring-accent' : 'bg-surface',
+              ]}
+              data-reveal
+              style={`--reveal-delay:${i * 100}ms`}
+            >
+              {t.featured && (
+                <p class="absolute -top-3 left-7 rounded-full bg-accent px-3 py-1 text-[12px] font-semibold text-white">
+                  El más elegido
+                </p>
+              )}
+              <p class:list={['font-mono text-[12.5px] font-medium tracking-wide uppercase', t.featured ? 'text-[#5ac8fa]' : 'text-accent']}>
+                Nivel {i + 1}
+              </p>
+              <h3 class:list={['mt-1.5 text-2xl font-bold', t.featured ? 'text-page' : 'text-ink']}>{t.name}</h3>
+              <p class:list={['mt-2 text-[14.5px]', t.featured ? 'text-page/75' : 'text-muted']}>{t.ideal}</p>
+
+              <p class="mt-6 flex items-baseline gap-1.5">
+                <span class:list={['text-[14px]', t.featured ? 'text-page/70' : 'text-muted']}>desde</span>
+                <span class:list={['font-display text-[42px] font-bold leading-none', t.featured ? 'text-page' : 'text-ink']}>
+                  {formatPrice(t.price)}
+                </span>
+              </p>
+
+              <ul class="mt-6 grid flex-1 content-start gap-2.5">
+                {t.includes.map((x) => (
+                  <li class:list={['flex gap-2.5 text-[14.5px]', t.featured ? 'text-page/90' : 'text-body']}>
+                    <svg viewBox="0 0 20 20" class="mt-[3px] h-4 w-4 shrink-0 text-accent" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                      <path d="M4 10.5l4 4 8-9" />
+                    </svg>
+                    <span>{x}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <dl class:list={['mt-6 grid grid-cols-2 gap-3 border-t pt-5 text-[13.5px]', t.featured ? 'border-white/15' : 'border-sep']}>
+                <div>
+                  <dt class:list={[t.featured ? 'text-page/60' : 'text-muted']}>Entrega</dt>
+                  <dd class:list={['font-semibold', t.featured ? 'text-page' : 'text-ink']}>{t.delivery}</dd>
+                </div>
+                <div>
+                  <dt class:list={[t.featured ? 'text-page/60' : 'text-muted']}>Revisiones</dt>
+                  <dd class:list={['font-semibold', t.featured ? 'text-page' : 'text-ink']}>{t.revisions}</dd>
+                </div>
+              </dl>
+
+              <a
+                href="#contacto"
+                data-pick-tier={t.name}
+                data-service={s.name}
+                class:list={[
+                  'mt-6 block rounded-full px-5 py-3 text-center text-[14.5px] font-semibold transition hover:-translate-y-0.5',
+                  t.featured ? 'bg-accent text-white' : 'bg-surface-2 text-ink',
+                ]}
+              >
+                Quiero este nivel
+              </a>
+            </article>
+          ))}
+        </div>
+        <p class="mt-6 text-[14px] text-muted">
+          ¿Tu proyecto no encaja en ningún nivel? <a href="#contacto" class="font-semibold text-accent hover:underline">Cuéntamelo</a> y te preparo una propuesta a medida.
+        </p>
+      </div>
+    </section>
+
+    <!-- Proceso -->
+    <section id="proceso" class="py-22" aria-labelledby="proceso-h">
+      <div class="wrap">
+        <p class="mb-3.5 text-[12.5px] font-semibold tracking-[0.14em] text-accent uppercase" data-reveal>Proceso</p>
+        <h2 id="proceso-h" class="text-[clamp(28px,5vw,38px)] font-bold text-ink" data-reveal>Cómo trabajamos, paso a paso</h2>
+        <p class="mt-3.5 mb-12 max-w-[620px] text-[17px] text-muted" data-reveal>
+          Sabes en todo momento en qué punto está tu proyecto y qué recibes al
+          terminar cada fase.
+        </p>
+
+        <ol class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {s.process.map((p, i) => (
+            <li class="flex flex-col rounded-card bg-surface p-6 shadow-card" data-reveal style={`--reveal-delay:${(i % 3) * 90}ms`}>
+              <span class="mb-4 grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-accent to-accent-2 font-display text-[17px] font-bold text-white">
+                {i + 1}
+              </span>
+              <h3 class="text-lg font-bold text-ink">{p.title}</h3>
+              <p class="mt-2 flex-1 text-[14.5px] leading-relaxed text-body">{p.body}</p>
+              <p class="mt-4 inline-flex self-start rounded-md bg-surface-2 px-2.5 py-1 font-mono text-[12px] text-ink">
+                → {p.output}
+              </p>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+
+    <!-- Trabajos reales -->
+    <section class="bg-[#1c1c1e] py-22 text-white" aria-labelledby="pruebas-h">
+      <div class="wrap">
+        <p class="mb-3.5 text-[12.5px] font-semibold tracking-[0.14em] text-[#5ac8fa] uppercase" data-reveal>Trabajo real</p>
+        <h2 id="pruebas-h" class="text-[clamp(28px,5vw,38px)] font-bold text-white" data-reveal>Lo que ya he hecho</h2>
+        <div class="mt-10 grid gap-5 md:grid-cols-3">
+          {s.proof.map((p, i) => (
+            <div class="flex flex-col rounded-2xl bg-[#2c2c2e] p-6" data-reveal style={`--reveal-delay:${i * 100}ms`}>
+              <h3 class="font-display text-lg text-white">{p.title}</h3>
+              <p class="mt-2 flex-1 text-[14.5px] leading-relaxed text-[#a1a1a6]">{p.body}</p>
+              {p.href && (
+                <a
+                  href={p.href}
+                  target={p.href.startsWith('http') ? '_blank' : undefined}
+                  rel={p.href.startsWith('http') ? 'noopener' : undefined}
+                  class="mt-4 font-mono text-[13px] text-[#5ac8fa] hover:underline"
+                >
+                  {p.linkLabel} {p.href.startsWith('http') ? '↗' : '→'}
+                </a>
+              )}
+            </div>
+          ))}
+        </div>
+        <div class="mt-10 flex flex-wrap gap-1.5" data-reveal>
+          {s.stack.map((x) => (
+            <span class="rounded-md bg-white/[0.08] px-2.5 py-1 font-mono text-[12px] text-white/85">{x}</span>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- Preguntas frecuentes -->
+    <section class="py-22" aria-labelledby="faq-h">
+      <div class="wrap max-w-[820px]">
+        <p class="mb-3.5 text-[12.5px] font-semibold tracking-[0.14em] text-accent uppercase" data-reveal>Preguntas frecuentes</p>
+        <h2 id="faq-h" class="mb-8 text-[clamp(28px,5vw,38px)] font-bold text-ink" data-reveal>Lo que suelen preguntarme</h2>
+        <div class="grid gap-3">
+          {s.faqs.map((f, i) => (
+            <details class="group rounded-2xl bg-surface-2 p-5 open:bg-surface open:shadow-card" open={i === 0} data-reveal>
+              <summary class="flex cursor-pointer list-none items-center justify-between gap-4 font-display text-[17px] font-semibold text-ink [&::-webkit-details-marker]:hidden">
+                <h3 class="font-display text-[17px] font-semibold">{f.q}</h3>
+                <span class="text-accent transition-transform group-open:rotate-45" aria-hidden="true">+</span>
+              </summary>
+              <p class="mt-3 text-[15px] leading-relaxed text-body">{f.a}</p>
+            </details>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <Contact service={s.slug} />
+
+    <!-- Otros servicios -->
+    <section class="py-22">
+      <div class="wrap">
+        <h2 class="mb-6 text-2xl font-bold text-ink">Otros servicios</h2>
+        <div class="grid gap-4 md:grid-cols-2">
+          {others.map((o) => (
+            <a href={`/servicios/${o.slug}`} class="group flex items-start gap-4 rounded-card bg-surface p-6 shadow-card transition hover:-translate-y-0.5 hover:shadow-card-lg">
+              <span class="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-surface-2 text-xl" aria-hidden="true">{o.icon}</span>
+              <span>
+                <span class="block font-display text-lg font-bold text-ink group-hover:text-accent">{o.name} →</span>
+                <span class="mt-1 block text-[14.5px] text-muted">{o.card}</span>
+              </span>
+            </a>
+          ))}
+        </div>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</Layout>

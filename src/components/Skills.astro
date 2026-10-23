@@ -1,0 +1,81 @@
+---
+// "Qué sé hacer": capacidades agrupadas, cada una con dónde la he demostrado.
+const skills = [
+  {
+    icon: '⚙️',
+    title: 'Firmware embebido',
+    body: 'C/C++ sobre ARM Cortex-M4F con FreeRTOS: tareas, interrupciones, temporizadores y bajo consumo. Drivers de periféricos escritos desde cero.',
+    tags: ['C', 'C++', 'FreeRTOS', 'SPI', 'I2C', 'UART'],
+    proof: 'MOOVIA · driver de IMU a 1 kHz',
+  },
+  {
+    icon: '📡',
+    title: 'Conectividad IoT',
+    body: 'Telemetría en tiempo real por BLE 5.2 con servicios GATT propios y control de pérdidas. Pipelines MQTT con Docker en mi laboratorio.',
+    tags: ['BLE / GATT', '802.15.4', 'MQTT', 'Docker', 'Linux'],
+    proof: 'MOOVIA · 0 paquetes perdidos',
+  },
+  {
+    icon: '📈',
+    title: 'Sensores y señal',
+    body: 'Convertir una señal ruidosa en una métrica fiable: orientación por cuaterniones, control de deriva y detección de fases del movimiento.',
+    tags: ['IMU', 'Madgwick', 'Kalman', 'ZUPT', 'Python'],
+    proof: 'MOOVIA · 0,03 m/s frente a referencia',
+  },
+  {
+    icon: '🔌',
+    title: 'Hardware y PCB',
+    body: 'Esquemático y layout de PCB de 4 capas en KiCad, soldadura de prototipos, bring-up y trato con el fabricante.',
+    tags: ['KiCad', 'Osciloscopio', 'Analizador lógico', 'Bring-up'],
+    proof: 'MOOVIA · PCB propia de 4 capas',
+  },
+  {
+    icon: '🧩',
+    title: 'Producto, web y datos',
+    body: 'Traducir un problema de negocio en un sistema que funciona: CRM, cuadros de mando y automatización de informes.',
+    tags: ['Next.js', 'TypeScript', 'Firebase', 'Power BI', 'VBA'],
+    proof: 'Clínica dental · automoción · Ayuntamiento',
+  },
+  {
+    icon: '🧭',
+    title: 'Método y ownership',
+    body: 'Llevo proyectos solo de principio a fin: requisitos, arquitectura documentada, riesgos, pruebas y entrega. Respondo del resultado, no solo de la tarea.',
+    tags: ['Git', 'ADR / documentación', 'ITIL', 'Agile', 'RGPD'],
+    proof: 'Fundador de MOOVIA',
+  },
+];
+---
+
+<section id="sabe" class="bg-surface-2 py-22">
+  <div class="wrap">
+    <p class="mb-3.5 text-[12.5px] font-semibold tracking-[0.14em] text-accent uppercase" data-reveal>
+      Qué sé hacer
+    </p>
+    <h2 class="max-w-[640px] text-[clamp(28px,5vw,38px)] font-bold text-ink" data-reveal>
+      Del esquemático al dato medido
+    </h2>
+    <p class="mt-3.5 mb-10 max-w-[600px] text-[17px] text-muted" data-reveal>
+      Cada capacidad va acompañada de dónde la he puesto en práctica.
+    </p>
+
+    <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      {skills.map((s, i) => (
+        <article
+          class="flex flex-col rounded-card bg-surface p-6 shadow-card transition duration-300 hover:-translate-y-1 hover:shadow-card-lg"
+          data-reveal
+          style={`--reveal-delay:${(i % 3) * 90}ms`}
+        >
+          <div class="mb-4 grid h-11 w-11 place-items-center rounded-2xl bg-surface-2 text-xl" aria-hidden="true">{s.icon}</div>
+          <h3 class="mb-2 text-lg font-bold text-ink">{s.title}</h3>
+          <p class="flex-1 text-[14.5px] leading-relaxed text-body">{s.body}</p>
+          <div class="mt-4 flex flex-wrap gap-1.5">
+            {s.tags.map((t) => (
+              <span class="rounded-md bg-surface-2 px-2.5 py-1 font-mono text-[11.5px] text-ink">{t}</span>
+            ))}
+          </div>
+          <p class="mt-4 border-t border-sep pt-3 text-[12.5px] font-medium text-accent">✓ {s.proof}</p>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>

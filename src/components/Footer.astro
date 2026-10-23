@@ -1,5 +1,6 @@
 ---
 import { site } from '../data/site';
+import { services } from '../data/services';
 const year = new Date().getFullYear();
 ---
 
@@ -10,8 +11,13 @@ const year = new Date().getFullYear();
       <span class="opacity-80">{site.legalName}</span>
     </div>
     <div class="flex flex-wrap items-center gap-4">
+      {services.map((sv) => (
+        <a href={`/servicios/${sv.slug}`} class="hover:text-accent">{sv.name}</a>
+      ))}
       <a href={site.linkedin} target="_blank" rel="noopener" class="hover:text-accent">LinkedIn</a>
       <a href={site.github} target="_blank" rel="noopener" class="hover:text-accent">GitHub</a>
+      <a href={`mailto:${site.email}`} class="hover:text-accent">Email</a>
+      <a href={site.moovia} target="_blank" rel="noopener" class="hover:text-accent">MOOVIA</a>
       <a href="/privacidad" class="hover:text-accent">Privacidad</a>
       <span>{site.location}</span>
     </div>

@@ -1,0 +1,164 @@
+---
+// Formulario de contacto / presupuesto.
+// Envío sin backend con FormSubmit (https://formsubmit.co), gratis y sin clave:
+// los mensajes llegan a site.email. La PRIMERA vez que alguien envíe el
+// formulario, FormSubmit manda un email de activación a esa dirección; hay que
+// pulsar "Activate" una sola vez. Con JS se envía por AJAX (sin salir de la
+// página); sin JS, el formulario hace un envío normal y vuelve a /gracias.
+import { site } from '../data/site';
+import { services } from '../data/services';
+
+interface Props {
+  /** slug del servicio preseleccionado (páginas de servicio). */
+  service?: string;
+  /** Fondo oscuro/gradiente: ajusta colores. */
+  tone?: 'light' | 'onColor';
+}
+const { service, tone = 'light' } = Astro.props;
+const action = `https://formsubmit.co/${site.email}`;
+const next = new URL('/gracias', Astro.site).href;
+const preset = services.find((s) => s.slug === service);
+const field =
+  'w-full rounded-xl border border-sep bg-surface px-4 py-3 text-[15px] text-ink placeholder:text-muted focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/25';
+const label = tone === 'onColor' ? 'text-white' : 'text-ink';
+---
+
+<form
+  action={action}
+  method="POST"
+  class="grid gap-4 text-left"
+  data-contact-form
+  data-endpoint={`https://formsubmit.co/ajax/${site.email}`}
+  data-email={site.email}
+>
+  <input type="hidden" name="_subject" value={`Nuevo contacto desde la web${preset ? ` — ${preset.name}` : ''}`} />
+  <input type="hidden" name="_template" value="table" />
+  <input type="hidden" name="_next" value={next} />
+  <input type="hidden" name="_captcha" value="false" />
+  <input type="hidden" name="Página" value={Astro.url.pathname} />
+  <!-- Trampa anti-spam: los humanos no la ven. -->
+  <input type="text" name="_honey" tabindex="-1" autocomplete="off" class="hidden" aria-hidden="true" />
+
+  <div class="grid gap-4 sm:grid-cols-2">
+    <label class="grid gap-1.5">
+      <span class:list={['text-[13.5px] font-semibold', label]}>Nombre</span>
+      <input name="Nombre" required autocomplete="name" class={field} placeholder="Tu nombre" />
+    </label>
+    <label class="grid gap-1.5">
+      <span class:list={['text-[13.5px] font-semibold', label]}>Email</span>
+      <input name="email" type="email" required autocomplete="email" class={field} placeholder="tu@email.com" />
+    </label>
+  </div>
+
+  <div class="grid gap-4 sm:grid-cols-2">
+    <label class="grid gap-1.5">
+      <span class:list={['text-[13.5px] font-semibold', label]}>Servicio</span>
+      <select name="Servicio" class={field} data-service-select>
+        {services.map((s) => (
+          <option value={s.name} selected={s.slug === service}>{s.name}</option>
+        ))}
+        <option value="Otro / no lo sé" selected={!preset}>Otro / aún no lo sé</option>
+      </select>
+    </label>
+    <label class="grid gap-1.5">
+      <span class:list={['text-[13.5px] font-semibold', label]}>Nivel <span class="font-normal opacity-70">(opcional)</span></span>
+      <select name="Nivel" class={field} data-tier-select>
+        <option value="Sin decidir">Sin decidir</option>
+        {(preset ? preset.tiers : []).map((t) => (
+          <option value={t.name}>{t.name}</option>
+        ))}
+      </select>
+    </label>
+  </div>
+
+  <label class="grid gap-1.5">
+    <span class:list={['text-[13.5px] font-semibold', label]}>Cuéntame tu proyecto</span>
+    <textarea
+      name="Mensaje"
+      required
+      rows="5"
+      class={field}
+      placeholder="Qué necesitas, para cuándo y cualquier enlace o detalle que ayude."
+    ></textarea>
+  </label>
+
+  <label class:list={['flex items-start gap-2.5 text-[13.5px]', tone === 'onColor' ? 'text-white/85' : 'text-body']}>
+    <input type="checkbox" name="Acepta privacidad" value="Sí" required class="mt-[3px] h-4 w-4 shrink-0 accent-[var(--accent)]" />
+    <span>
+      He leído y acepto la <a href="/privacidad" class:list={['font-semibold underline', tone === 'onColor' ? 'text-white' : 'text-accent']}>política de privacidad</a>.
+      Tus datos solo se usan para responder a tu mensaje.
+    </span>
+  </label>
+
+  <div class="flex flex-wrap items-center gap-4">
+    <button
+      type="submit"
+      class:list={[
+        'rounded-full px-7 py-3.5 text-[15px] font-semibold transition hover:-translate-y-0.5 disabled:opacity-60',
+        tone === 'onColor' ? 'bg-white text-[#1c1c1e]' : 'bg-accent text-white shadow-[0_8px_24px_rgba(0,122,255,0.28)]',
+      ]}
+      data-submit
+    >
+      Enviar mensaje
+    </button>
+    <p class:list={['text-[14px] font-medium', tone === 'onColor' ? 'text-white' : 'text-ink']} role="status" aria-live="polite" data-status></p>
+  </div>
+</form>
+
+<script>
+  import { services } from '../data/services';
+
+  const tiersFor = (name: string) => services.find((s) => s.name === name)?.tiers ?? [];
+
+  const setup = () => {
+    document.querySelectorAll<HTMLFormElement>('[data-contact-form]:not([data-ready])').forEach((form) => {
+      form.dataset.ready = '1';
+      const svc = form.querySelector<HTMLSelectElement>('[data-service-select]')!;
+      const tier = form.querySelector<HTMLSelectElement>('[data-tier-select]')!;
+      const status = form.querySelector<HTMLElement>('[data-status]')!;
+      const btn = form.querySelector<HTMLButtonElement>('[data-submit]')!;
+
+      // Los niveles disponibles dependen del servicio elegido.
+      const fillTiers = (selected?: string) => {
+        tier.innerHTML = '<option value="Sin decidir">Sin decidir</option>';
+        tiersFor(svc.value).forEach((t) => {
+          const o = new Option(t.name, t.name, false, t.name === selected);
+          tier.add(o);
+        });
+      };
+      svc.addEventListener('change', () => fillTiers());
+
+      // Los botones "Quiero este nivel" preseleccionan el nivel.
+      document.querySelectorAll<HTMLElement>('[data-pick-tier]').forEach((a) =>
+        a.addEventListener('click', () => {
+          if (a.dataset.service) svc.value = a.dataset.service;
+          fillTiers(a.dataset.pickTier);
+        })
+      );
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        btn.disabled = true;
+        status.textContent = 'Enviando…';
+        try {
+          const res = await fetch(form.dataset.endpoint!, {
+            method: 'POST',
+            headers: { Accept: 'application/json' },
+            body: new FormData(form),
+          });
+          const data = await res.json().catch(() => ({}));
+          if (!res.ok || data.success === 'false' || data.success === false) throw new Error(data.message);
+          form.reset();
+          fillTiers();
+          status.textContent = '¡Mensaje enviado! Te respondo lo antes posible.';
+        } catch {
+          const m = form.dataset.email;
+          status.innerHTML = `No se ha podido enviar. Escríbeme a <a class="underline" href="mailto:${m}">${m}</a>.`;
+        } finally {
+          btn.disabled = false;
+        }
+      });
+    });
+  };
+  document.addEventListener('astro:page-load', setup);
+</script>

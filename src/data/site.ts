@@ -9,40 +9,44 @@ export const site = {
   // Nombre legal completo (coincide con LinkedIn y GitHub). Se usa en el SEO
   // (título, autor, datos estructurados) para posicionar también por él.
   legalName: 'Ashlyn Abraham Cedeño Holguín',
-  role: 'Ingeniero de Software Embebido & IoT',
+  role: 'Desarrollador freelance: webs, sistemas embebidos y paneles de control',
   location: 'Barcelona, España',
   locale: 'es_ES',
-  // Titular / propuesta de valor (aparece en el hero y en las meta descripciones).
+  // Titular (aparece en el hero y en las meta descripciones).
   tagline:
-    'Firmware en C/C++, sistemas en tiempo real y fusión de sensores para dispositivos conectados. Del microcontrolador al dato útil.',
+    'Hago páginas web, dispositivos electrónicos y paneles de control para negocios y startups. Precio cerrado, proceso claro y una sola persona responsable de principio a fin.',
   seoDescription:
-    'Ashlyn Abraham Cedeño Holguín (Abraham Cedeño), ingeniero de software embebido e IoT freelance en Barcelona. Firmware C/C++ sobre ARM Cortex-M, FreeRTOS, drivers de sensores, BLE y fusión de sensores. Del microcontrolador al dato fiable.',
+    'Abraham Cedeño (Ashlyn Abraham Cedeño Holguín), desarrollador e ingeniero freelance en Barcelona. Páginas web con SEO y GEO, sistemas embebidos (firmware C/C++, BLE, PCB) y paneles de control a medida. Tres niveles de precio por servicio.',
 
   // Datos de contacto reales.
   email: 'abraham.ceho@hotmail.com',
   linkedin: 'https://www.linkedin.com/in/ashlyn-abraham-cede%C3%B1o-holguin-9410a0200/',
   github: 'https://github.com/abrahamcedeno',
+  moovia: 'https://moovia.app',
 
-  // Palabras clave objetivo (SEO/GEO, mercado España).
+  // Palabras clave objetivo (SEO, búsquedas de selección).
   keywords: [
     'Ashlyn Abraham Cedeño Holguín',
     'Abraham Cedeño',
-    'Abraham Cedeño ingeniero',
-    'ingeniero freelance firmware',
-    'desarrollo firmware C/C++',
+    'Abraham Cedeño freelance',
+    'desarrollador freelance Barcelona',
+    'desarrollo web Barcelona',
+    'ingeniero sistemas embebidos freelance',
+    'desarrollo firmware freelance',
+    'paneles de control a medida',
     'ingeniero IoT Barcelona',
-    'freelance sistemas embebidos España',
-    'programador de microcontroladores',
-    'desarrollo BLE',
-    'fusión de sensores',
-    'Edge AI',
     'FreeRTOS',
-    'ARM Cortex-M',
+    'ARM Cortex-M4',
+    'BLE GATT',
+    'fusión de sensores',
+    'diseño PCB KiCad',
+    'seguridad IoT',
+    'MOOVIA',
   ],
 
   // Disponibilidad mostrada en el hero.
   available: true,
-  availableText: 'Disponible para proyectos freelance · Barcelona / remoto',
+  availableText: 'Aceptando nuevos proyectos · Barcelona y remoto',
 } as const;
 
 export type SiteConfig = typeof site;

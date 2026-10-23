@@ -6,14 +6,18 @@ import { ClientRouter } from 'astro:transitions';
 interface Props {
   title?: string;
   description?: string;
+  image?: string;
+  keywords?: readonly string[];
+  schema?: object[];
+  noindex?: boolean;
 }
-const { title, description } = Astro.props;
+const { title, description, image, keywords, schema, noindex } = Astro.props;
 ---
 
 <!doctype html>
 <html lang="es">
   <head>
-    <BaseHead title={title} description={description} />
+    <BaseHead title={title} description={description} image={image} keywords={keywords} schema={schema} noindex={noindex} />
     <ClientRouter />
     {/* Aplica el tema antes de pintar para evitar parpadeo (FOUC). */}
     <script is:inline>

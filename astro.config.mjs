@@ -3,11 +3,13 @@ import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 import tailwindcss from '@tailwindcss/vite';
 
-// URL pública del sitio (Firebase Hosting, proyecto "freelancer-1de06").
-// Firebase da dos URLs equivalentes: .web.app y .firebaseapp.com; usamos la
-// primera como canónica. Si algún día usas dominio propio, cámbiala aquí.
+// URL pública del sitio: dominio propio servido por Firebase Hosting
+// (proyecto "freelancer-1de06"). Es un dominio internacionalizado (IDN):
+//   ashlynabrahamcedeñoholguín.com  ->  xn--ashlynabrahamcedeoholgun-sic1h.com
+// Se escribe en punycode porque es la forma que usan DNS, sitemap y buscadores.
+// La versión www y las URLs .web.app / .firebaseapp.com redirigen aquí.
 // Sirve para sitemap, canonical y Open Graph.
-const SITE = 'https://freelancer-1de06.web.app';
+const SITE = 'https://xn--ashlynabrahamcedeoholgun-sic1h.com';
 
 // https://astro.build/config
 export default defineConfig({

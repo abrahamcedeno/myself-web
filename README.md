@@ -8,7 +8,9 @@ The site is built as a fast static website with Astro, Tailwind CSS, TypeScript,
 
 Production URL:
 
-[https://freelancer-1de06.web.app](https://freelancer-1de06.web.app)
+[https://ashlynabrahamcedeñoholguín.com](https://xn--ashlynabrahamcedeoholgun-sic1h.com)
+
+Punycode (DNS/SEO): `xn--ashlynabrahamcedeoholgun-sic1h.com`. The `www` subdomain redirects to it; the Firebase default URL (`freelancer-1de06.web.app`) still works and points search engines here via the canonical tag.
 
 ## Tech Stack
 

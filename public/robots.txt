@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://freelancer-1de06.web.app/sitemap-index.xml
+Sitemap: https://xn--ashlynabrahamcedeoholgun-sic1h.com/sitemap-index.xml
